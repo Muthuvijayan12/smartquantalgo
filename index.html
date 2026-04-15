@@ -1,0 +1,2189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMART QUANT ALGO | Automated Gold Trading EA</title>
+<meta name="description" content="SQA Pro EA — institutional-grade automated trading system for XAUUSD & Forex on MetaTrader 5. 93% win rate, live-verified results, $349/yr. Trusted by 5,000+ traders worldwide.">
+<meta name="keywords" content="forex EA, gold trading bot, XAUUSD EA, automated trading, MetaTrader 5, expert advisor, prop firm EA, SQA Pro">
+<meta property="og:title" content="Smart Quant Algo — Automated Gold & Forex Trading EA">
+<meta property="og:description" content="Institutional-grade EA for MT5. 93% win rate, live-verified. Join 5,000+ traders in 30+ countries.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="robots" content="index, follow">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#0f1419;color:#e2e8f0;font-family:'Inter',sans-serif;overflow-x:hidden;min-height:100vh}
+:root{
+  --primary:#d4af37;--primary-dark:#b8941d;--secondary:#1e293b;--secondary-light:#334155;
+  --bg-dark:#0f1419;--bg-card:#1a1f2e;--bg-hover:#252d3d;--border:#404854;--border-light:#505a6d;
+  --text:#e2e8f0;--text-muted:#94a3b8;--text-dim:#64748b;--accent-green:#10b981;--accent-red:#ef4444;
+}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:#000}::-webkit-scrollbar-thumb{background:var(--primary);border-radius:2px}
+::-webkit-scrollbar-thumb:hover{background:var(--primary-dark)}
+
+
+@keyframes profitPulse{0%,100%{text-shadow:0 0 10px rgba(16,185,129,0.3)}50%{text-shadow:0 0 20px rgba(16,185,129,0.5)}}
+@keyframes buttonGlow{0%,100%{box-shadow:0 0 15px rgba(212,175,55,.2)}50%{box-shadow:0 0 25px rgba(212,175,55,.4)}}
+
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:72px;background:rgba(6,13,26,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo-icon{width:44px;height:44px;background:linear-gradient(135deg,#0d1b30,#162644);border:1.5px solid var(--primary);display:flex;align-items:center;justify-content:center;border-radius:10px;box-shadow:0 2px 8px rgba(212,175,55,0.2)}
+.logo-icon svg{width:26px;height:26px}
+.hamburger{display:none;background:none;border:none;cursor:pointer;padding:6px;flex-direction:column;gap:5px}
+.hamburger span{display:block;width:24px;height:2px;background:var(--text);transition:all .3s}
+@media(max-width:900px){
+  .hamburger{display:flex}
+  .nav-links{position:fixed;top:72px;left:0;right:0;background:rgba(6,13,26,.98);backdrop-filter:blur(16px);flex-direction:column;padding:1rem 0;border-bottom:1px solid var(--border);display:none;z-index:200}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:.75rem 5%;width:100%;text-align:left}
+  .nav-buy{display:none}
+}
+.logo-text{font-family:'Inter',sans-serif;font-weight:700;font-size:1.1rem;color:#fff;letter-spacing:0.5px;line-height:1.1}
+.logo-text span{display:block;color:var(--primary);font-size:.7rem;font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.nav-links{display:flex;align-items:center;gap:.25rem;list-style:none}
+.nav-links a{padding:.5rem 1.1rem;font-family:'Inter',sans-serif;font-weight:600;font-size:.85rem;letter-spacing:0.5px;text-transform:uppercase;text-decoration:none;color:var(--text-muted);transition:color .2s;position:relative;cursor:pointer}
+.nav-links a:hover,.nav-links a.active{color:var(--primary)}
+.nav-links a.active::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:60%;height:2px;background:var(--primary);box-shadow:0 0 8px rgba(212,175,55,0.4)}
+.nav-buy{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#000;border:none;padding:.7rem 2rem;font-family:'Inter',sans-serif;font-weight:700;font-size:.85rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:6px;text-decoration:none;transition:all .25s ease;box-shadow:0 4px 12px rgba(212,175,55,0.25)}
+.nav-buy:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(212,175,55,0.4);letter-spacing:1.5px}
+
+/* TICKER */
+.ticker-wrap{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(212,175,55,.03);padding:.6rem 0;position:fixed;top:72px;left:0;right:0;z-index:199}
+.ticker-inner{display:flex;gap:4rem;animation:tick 25s linear infinite;white-space:nowrap}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tick-i{font-family:'Inter',sans-serif;font-size:.78rem;color:var(--text-muted)}
+.tick-i b{color:var(--primary);margin-left:.5rem}.tick-i .neg{color:var(--accent-red)}
+
+/* PAGES */
+.page{display:none;position:relative;z-index:1;padding-top:102px;min-height:100vh;background:var(--bg-dark)}
+.page.active{display:block}
+#home.active{display:flex;flex-direction:column}
+
+/* HERO */
+.hero{min-height:calc(100vh - 102px);display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:2rem;padding:4rem 5%}
+@media(max-width:900px){.hero{grid-template-columns:1fr;text-align:center}}
+.live-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.3);padding:.4rem 1.2rem;border-radius:30px;font-family:'Inter',sans-serif;font-size:.78rem;letter-spacing:0.5px;color:var(--primary);margin-bottom:1.5rem}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--accent-green);animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,.5)}50%{box-shadow:0 0 0 6px rgba(16,185,129,0)}}
+.hero-title{font-family:'Inter',sans-serif;font-size:clamp(2.2rem,5vw,4rem);font-weight:900;color:#fff;line-height:1.1;margin-bottom:1rem;letter-spacing:-0.02em}
+.hero-title strong{display:block;font-weight:900;color:var(--primary);font-size:1.1em;font-family:'Inter',sans-serif}
+.hero-desc{font-size:1.05rem;color:var(--text-muted);line-height:1.8;max-width:520px;margin-bottom:2.5rem}
+.hero-desc b{color:var(--primary)}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
+@media(max-width:900px){.hero-btns{justify-content:center}}
+.btn-main{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#000;border:none;padding:1rem 2.5rem;font-family:'Inter',sans-serif;font-weight:700;font-size:.95rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:6px;text-decoration:none;transition:all .25s ease;box-shadow:0 4px 12px rgba(212,175,55,0.25)}.btn-main:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(212,175,55,0.4);letter-spacing:1.5px}
+.btn-outline{background:transparent;color:var(--primary);border:1.5px solid var(--primary);padding:1rem 2.5rem;font-family:'Inter',sans-serif;font-weight:600;font-size:.95rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:6px;text-decoration:none;transition:all .25s ease}.btn-outline:hover{background:rgba(212,175,55,0.1);border-color:var(--primary);box-shadow:0 0 15px rgba(212,175,55,0.2)}
+.robot-frame{position:relative;width:440px;height:400px;max-width:100%;background:linear-gradient(160deg,#0d1520 0%,#111d2e 40%,#0f1a28 100%);border:1px solid rgba(212,175,55,0.2);border-radius:16px;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 40px rgba(212,175,55,0.05),inset 0 1px 0 rgba(255,255,255,0.03)}
+.robot-frame::before{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(212,175,55,.06),transparent);animation:shine 4s ease-in-out infinite}
+@keyframes shine{0%{left:-100%}100%{left:200%}}
+@keyframes barGrow{from{width:0%}}
+.robot-inner{text-align:center;padding:1.5rem;width:100%}
+.robot-svg{width:100%;height:220px;margin:0 auto}
+.robot-stats{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem}
+.r-stat{background:rgba(212,175,55,.05);border:1px solid var(--border);padding:.8rem;border-radius:6px;text-align:center}
+.r-stat-val{font-family:'Inter',sans-serif;font-weight:700;font-size:1.1rem;color:#fff}
+.r-stat-label{font-size:.72rem;color:var(--text-muted);letter-spacing:1px;margin-top:2px}
+.corner-tag{position:absolute;font-family:'Inter',sans-serif;font-size:.6rem;color:rgba(212,175,55,.3);letter-spacing:0.5px;font-weight:500}
+.corner-tag.tl{top:8px;left:12px}.corner-tag.tr{top:8px;right:12px}.corner-tag.bl{bottom:8px;left:12px}.corner-tag.br{bottom:8px;right:12px}
+.hero-visual{display:flex;align-items:center;justify-content:center}
+
+/* STATS BAR */
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(0,0,0,0.2)}
+.stat-cell{padding:2rem;text-align:center;border-right:1px solid var(--border);background:transparent;transition:background .3s}
+.stat-cell:last-child{border-right:none}
+.stat-cell:hover{background:rgba(212,175,55,0.05)}
+.stat-num{font-family:'Inter',sans-serif;font-weight:900;font-size:2.5rem;color:var(--primary);display:block;letter-spacing:-0.02em}
+.stat-label{font-size:.78rem;color:var(--text-muted);letter-spacing:0.5px;text-transform:uppercase;margin-top:4px;font-family:'Inter',sans-serif;font-weight:600}
+@media(max-width:700px){.stats-bar{grid-template-columns:1fr 1fr}.stat-cell:nth-child(2){border-right:none}.stat-cell:nth-child(3){border-right:1px solid var(--border)}}
+
+/* SECTION HEADERS */
+.section-label{font-family:'Inter',sans-serif;font-size:.7rem;letter-spacing:0.5px;color:var(--text-muted);text-transform:uppercase;margin-bottom:.75rem;font-weight:600}
+.section-title{font-family:'Inter',sans-serif;font-weight:900;font-size:clamp(1.8rem,3.5vw,2.8rem);color:#fff;line-height:1.15;margin-bottom:1rem;letter-spacing:-0.01em}
+.section-title span{color:var(--primary)}
+.section-desc{color:var(--text-muted);font-size:1rem;line-height:1.8;max-width:560px}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.fade-in.visible{opacity:1;transform:none}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-top:4rem}
+@media(max-width:900px){.about-grid{grid-template-columns:1fr}}
+.about-hexagon{width:100%;max-width:380px;aspect-ratio:1;margin:0 auto;position:relative}
+.hex-bg{width:100%;height:100%;background:radial-gradient(circle at 50% 50%,rgba(212,175,55,.06) 0%,transparent 70%);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);border:1px solid rgba(212,175,55,.2);display:flex;align-items:center;justify-content:center;flex-direction:column}
+.hex-center-icon{width:120px;height:120px;margin-bottom:.5rem}
+.hex-center-text{font-family:'Inter',sans-serif;font-weight:700;font-size:1.2rem;color:#fff;margin-top:.5rem}
+.hex-label{font-size:.7rem;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;font-family:'Inter',sans-serif}
+.orbit-ring{position:absolute;inset:-20px;border:1px dashed rgba(212,175,55,.12);border-radius:50%;animation:spin 20s linear infinite}
+.orbit-ring2{position:absolute;inset:-50px;border:1px dashed rgba(212,175,55,.06);border-radius:50%;animation:spin 30s linear infinite reverse}
+.orbit-dot{position:absolute;top:-4px;left:calc(50% - 4px);width:8px;height:8px;border-radius:50%;background:var(--primary);box-shadow:0 0 10px rgba(212,175,55,0.4)}
+.feature-list{list-style:none}
+.feature-list li{display:flex;align-items:flex-start;gap:1rem;padding:1.1rem 0;border-bottom:1px solid var(--border);font-size:1rem;color:var(--text)}
+.feature-list li:last-child{border-bottom:none}
+.feat-icon{width:32px;height:32px;flex-shrink:0;background:rgba(212,175,55,.08);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+
+/* PRODUCT */
+.product-wrap{max-width:700px;margin:3rem auto 0;background:var(--bg-card);border:1.5px solid var(--border);border-radius:12px;padding:2.5rem;box-shadow:0 4px 24px rgba(212,175,55,0.1);position:relative;overflow:hidden}
+.product-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--primary),transparent)}
+.product-header{display:flex;align-items:center;gap:1.2rem;margin-bottom:.5rem}
+.prod-icon{width:52px;height:52px;background:rgba(212,175,55,0.08);border:1.5px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+.prod-title{font-family:'Inter',sans-serif;font-weight:800;font-size:1.8rem;color:#fff;letter-spacing:0.5px}
+.prod-subtitle{font-size:.8rem;color:var(--text-muted);letter-spacing:0.5px;text-transform:uppercase;margin-top:2px;font-family:'Inter',sans-serif;font-weight:600}
+.pairs-grid{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.5rem 0}
+.pair-tag{background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.3);padding:.2rem .7rem;border-radius:4px;font-family:'Inter',sans-serif;font-size:.75rem;color:var(--primary);font-weight:600}
+.divider{height:1px;background:var(--border);margin:1.5rem 0}
+.feature-bullets{list-style:none;margin-bottom:1.5rem}
+.feature-bullets li{display:flex;align-items:flex-start;gap:.75rem;padding:.6rem 0;border-bottom:1px solid rgba(212,175,55,.06);font-size:.95rem;color:var(--text)}
+.feature-bullets li::before{content:'◆';color:var(--primary);font-size:.6rem;margin-top:5px;flex-shrink:0}
+.pricing-title{font-family:'Inter',sans-serif;font-weight:700;font-size:1.1rem;color:#fff;text-align:center;letter-spacing:0.5px;margin-bottom:1.5rem;text-transform:uppercase}
+.pricing-cards{display:grid;grid-template-columns:1fr;gap:1.2rem;margin-bottom:1.2rem;max-width:380px;margin-left:auto;margin-right:auto;margin-bottom:1.2rem}
+.price-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:2rem 1.5rem;text-align:center;transition:all .25s ease}
+.price-card:hover{border-color:var(--primary);transform:translateY(-4px);box-shadow:0 8px 24px rgba(212,175,55,0.15)}
+.price-card.featured{border:2px solid var(--primary);background:linear-gradient(135deg,rgba(212,175,55,0.05),rgba(212,175,55,0.02));box-shadow:0 0 30px rgba(212,175,55,0.15)}
+.price-amount{font-family:'Inter',sans-serif;font-weight:900;font-size:2.5rem;color:#fff}
+.price-period{font-size:.75rem;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;margin:4px 0}
+.price-type{font-size:.7rem;color:var(--primary);letter-spacing:1px;text-transform:uppercase;margin-bottom:1.2rem;font-weight:600}
+.price-btn{width:100%;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#000;border:none;padding:.8rem;font-family:'Inter',sans-serif;font-weight:700;font-size:.85rem;letter-spacing:1px;cursor:pointer;border-radius:6px;transition:all .25s;box-shadow:0 4px 12px rgba(212,175,55,0.25);text-transform:uppercase}
+.price-btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(212,175,55,0.4)}
+.price-note{font-family:'Inter',sans-serif;font-size:.72rem;color:var(--primary);text-align:center}
+.price-disclaimer{font-size:.72rem;color:var(--text-muted);text-align:center;margin-top:.5rem;font-style:italic}
+
+/* RESULTS */
+.results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:3rem}
+.result-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:2rem;position:relative;overflow:hidden;transition:all .25s ease;box-shadow:0 0 20px rgba(212,175,55,0.05)}
+.result-card:hover{border-color:var(--primary);transform:translateY(-4px);box-shadow:0 8px 24px rgba(212,175,55,0.15)}
+.result-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--primary),transparent);opacity:0;transition:opacity .25s}
+.result-card:hover::after{opacity:1}
+.rc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem}
+.rc-pair{font-family:'Inter',sans-serif;font-weight:700;font-size:1.1rem;color:#fff;text-transform:uppercase;letter-spacing:0.5px}
+.rc-badge{background:rgba(212,175,55,0.1);border:1px solid var(--primary);padding:.3rem .8rem;border-radius:20px;font-size:.75rem;color:var(--primary);font-family:'Inter',sans-serif;font-weight:600}
+.rc-profit{font-family:'Inter',sans-serif;font-weight:900;font-size:2.2rem;color:var(--accent-green);margin-bottom:.25rem;letter-spacing:-0.01em}
+.rc-period{font-size:.8rem;color:var(--text-muted);margin-bottom:1rem;font-weight:500}
+.rc-bar-wrap{height:4px;background:rgba(212,175,55,.08);border-radius:2px;margin-bottom:1rem;overflow:hidden;border:1px solid rgba(212,175,55,0.2)}
+.rc-bar{height:100%;background:linear-gradient(90deg,var(--primary),var(--primary-dark));border-radius:2px;animation:barGrow 1.5s ease-out forwards;box-shadow:0 0 12px rgba(212,175,55,0.4)}
+.rc-stats{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.rc-stat{text-align:center}
+.rc-stat-val{font-family:'Inter',sans-serif;font-weight:700;font-size:.95rem;color:#fff}
+.rc-stat-label{font-size:.7rem;color:var(--text-muted);letter-spacing:1px}
+.equity-box{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.8rem;margin-bottom:3rem}
+.equity-title{font-family:'Inter',sans-serif;font-weight:700;font-size:1rem;color:#fff;letter-spacing:0.5px;margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem}
+.equity-title span{font-size:.72rem;color:var(--accent-green);font-family:'Inter',sans-serif;font-weight:600}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:3rem;margin-top:3rem;align-items:start}
+@media(max-width:900px){.contact-grid{grid-template-columns:1fr}}
+.info-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.3rem 1.5rem;display:flex;align-items:center;gap:1rem;transition:border-color .2s;margin-bottom:1rem}
+.info-card:hover{border-color:var(--primary)}
+.info-icon{width:44px;height:44px;flex-shrink:0;background:rgba(212,175,55,.08);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.info-label{font-size:.72rem;color:var(--text-muted);letter-spacing:0.5px;text-transform:uppercase;font-family:'Inter',sans-serif;font-weight:600}
+.info-val{font-family:'Inter',sans-serif;font-weight:600;font-size:1rem;color:#fff;margin-top:3px}
+.info-val a{color:var(--primary);text-decoration:none;transition:opacity .2s}
+.info-val a:hover{opacity:.7}
+.contact-form-box{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:2.5rem;position:relative;overflow:hidden}
+.contact-form-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--primary),transparent)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:600px){.form-row{grid-template-columns:1fr}}
+.form-group{margin-bottom:1.2rem}
+.form-label{display:block;font-family:'Inter',sans-serif;font-size:.7rem;letter-spacing:0.5px;color:var(--text-muted);text-transform:uppercase;margin-bottom:.5rem;font-weight:600}
+.form-input,.form-select,.form-textarea{width:100%;background:rgba(212,175,55,0.05);border:1px solid var(--border);color:#fff;padding:.85rem 1rem;border-radius:6px;font-family:'Inter',sans-serif;font-size:.95rem;transition:border-color .2s,box-shadow .2s;outline:none;appearance:none}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(212,175,55,0.1)}
+.form-textarea{min-height:130px;resize:vertical}
+.form-select{cursor:pointer}
+option{background:#0a1628}
+.btn-submit{width:100%;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#1a1f2e;border:none;padding:1rem;font-family:'Inter',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:0.5px;text-transform:uppercase;cursor:pointer;border-radius:6px;transition:all .2s;box-shadow:0 4px 12px rgba(212,175,55,0.25)}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(212,175,55,0.35)}
+
+/* FOOTER */
+footer{background:var(--bg-dark);border-top:1px solid var(--border);padding:3rem 5% 2rem;position:relative;z-index:1}
+.footer-inner{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:3rem;margin-bottom:2rem}
+@media(max-width:700px){.footer-inner{grid-template-columns:1fr}}
+.footer-brand p{font-size:.88rem;color:var(--text-muted);line-height:1.7;margin-top:.75rem;max-width:280px}
+.footer-col h4{font-family:'Inter',sans-serif;font-size:.7rem;letter-spacing:0.5px;color:var(--primary);text-transform:uppercase;margin-bottom:1rem;font-weight:700}
+.footer-col ul{list-style:none}
+.footer-col ul li{margin-bottom:.6rem}
+.footer-col ul li a{color:var(--text-muted);text-decoration:none;font-size:.88rem;transition:color .2s;cursor:pointer}
+.footer-col ul li a:hover{color:var(--primary)}
+.footer-bottom{border-top:1px solid var(--border);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-bottom p{font-size:.78rem;color:var(--text-muted);font-family:'Inter',sans-serif;font-weight:500}
+.risk-warning{font-size:.72rem;color:var(--text-dim);line-height:1.6;margin-top:1rem}
+.logo-text-f{font-family:'Inter',sans-serif;font-weight:700;font-size:1.1rem;color:var(--primary)}
+
+/* =========================
+   PAYMENT MODAL SYSTEM
+   ========================= */
+.modal-overlay{
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(0,0,0,.75);
+  backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;
+  padding:1rem;
+}
+.modal-overlay.open{display:flex}
+.modal-box{
+  background:var(--bg-dark);
+  border:2px solid var(--primary);
+  border-radius:16px;
+  padding:3rem;
+  width:100%;max-width:580px;
+  position:relative;
+  box-shadow:0 8px 32px rgba(212,175,55,0.15),0 0 0 1px rgba(212,175,55,0.05);
+  animation:modalIn .35s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.9) translateY(20px)}to{opacity:1;transform:none}}
+.modal-close{
+  position:absolute;top:1rem;right:1.2rem;
+  background:none;border:none;color:var(--text-muted);font-size:1.3rem;cursor:pointer;
+  transition:color .2s;line-height:1;
+}
+.modal-close:hover{color:var(--primary)}
+.modal-step{display:none}.modal-step.active{display:block}
+.modal-title{font-family:'Inter',sans-serif;font-weight:700;font-size:1.5rem;color:#fff;text-align:center;margin-bottom:.6rem;letter-spacing:-0.01em;}
+.modal-title strong{color:var(--primary)}
+.modal-sub{font-size:1rem;color:var(--text);text-align:center;margin-bottom:2rem;line-height:1.6}
+.modal-sub b{color:var(--primary);font-weight:700}
+
+/* Payment method grid */
+.pay-methods{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem}
+.pay-method-btn{
+  background:rgba(212,175,55,0.05);border:1px solid var(--border);
+  border-radius:10px;padding:1.2rem .7rem;text-align:center;
+  cursor:pointer;transition:all .3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.pay-method-btn:hover,.pay-method-btn.selected{border-color:var(--primary);background:rgba(212,175,55,0.12);transform:translateY(-4px);box-shadow:0 8px 24px rgba(212,175,55,0.2)}
+.pay-method-name{font-family:'Inter',sans-serif;font-weight:600;font-size:.95rem;color:#fff;display:block}
+.pay-method-fee{font-size:.72rem;color:var(--text-muted);margin-top:3px;font-family:'Inter',sans-serif;font-weight:400}
+.pay-method-wide{grid-column:1/-1}
+.pay-method-wide .pay-method-btn{display:flex;align-items:center;justify-content:center;gap:1rem;padding:.9rem}
+.pay-method-icon{font-size:1.3rem}
+
+/* Crypto grid */
+.crypto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.8rem}
+.crypto-btn{
+  background:rgba(212,175,55,0.05);border:1px solid var(--border);
+  border-radius:10px;padding:1rem .7rem;text-align:center;
+  cursor:pointer;transition:all .3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.crypto-btn:hover,.crypto-btn.selected{border-color:var(--primary);background:rgba(212,175,55,0.12);transform:translateY(-4px);box-shadow:0 8px 24px rgba(212,175,55,0.2)}
+.crypto-name{font-family:'Inter',sans-serif;font-weight:600;font-size:.95rem;color:#fff;display:block}
+.crypto-ticker{font-size:.72rem;color:var(--text-muted);margin-top:2px;font-family:'Inter',sans-serif;font-weight:400}
+
+/* Network grid */
+.network-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.8rem}
+.network-btn{
+  background:rgba(212,175,55,0.05);border:1px solid var(--border);
+  border-radius:10px;padding:1rem .7rem;text-align:center;
+  cursor:pointer;transition:all .3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.network-btn:hover,.network-btn.selected{border-color:var(--primary);background:rgba(212,175,55,0.12);transform:translateY(-4px);box-shadow:0 8px 24px rgba(212,175,55,0.2)}
+.network-name{font-family:'Inter',sans-serif;font-weight:600;font-size:.9rem;color:#fff;display:block;line-height:1.2}
+.network-addr{font-size:.6rem;color:var(--text-muted);margin-top:4px;font-family:'Inter',sans-serif;font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;display:block}
+
+/* Payment complete */
+.payment-address-wrap{margin-bottom:1.5rem}
+.payment-address-label{font-family:'Inter',sans-serif;font-size:.7rem;letter-spacing:1px;color:var(--text-muted);margin-bottom:.5rem;display:block;font-weight:600;text-transform:uppercase}
+.payment-address-row{display:flex;gap:.5rem}
+.payment-address-input{flex:1;background:rgba(212,175,55,0.05);border:1px solid var(--border);color:#fff;padding:.75rem 1rem;border-radius:6px;font-family:'Inter',sans-serif;font-size:.8rem;outline:none;transition:all .2s}
+.payment-address-input:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(212,175,55,0.1)}
+.copy-btn{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#1a1f2e;border:none;padding:.75rem 1.2rem;border-radius:6px;font-family:'Inter',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;white-space:nowrap;transition:all .2s}
+.copy-btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(212,175,55,0.3)}
+.payment-instructions{background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.2);border-radius:8px;padding:1.2rem;margin-bottom:1.5rem}
+.instructions-title{font-family:'Inter',sans-serif;font-weight:700;color:var(--primary);margin-bottom:.75rem;font-size:.95rem;text-transform:uppercase;letter-spacing:0.5px}
+.instructions-list{list-style:none}
+.instructions-list li{display:flex;align-items:flex-start;gap:.6rem;font-size:.88rem;color:var(--text);margin-bottom:.5rem}
+.instructions-list li::before{content:'→';color:var(--primary);font-weight:700;flex-shrink:0}
+.instructions-list li b{color:#fff}
+.timer-display{font-family:'Inter',sans-serif;font-weight:900;font-size:2rem;color:var(--accent-green);text-align:center;margin-bottom:.8rem;letter-spacing:0.05em;transition:all .2s}
+.timer-warning{font-size:.8rem;color:var(--text-muted);text-align:center;margin-bottom:1.5rem;font-family:'Inter',sans-serif;font-weight:500;transition:color .3s}
+
+/* Payment confirmed */
+.confirmed-icon{text-align:center;font-size:3rem;margin-bottom:1rem;color:var(--accent-green)}
+.contacts-box{background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.2);border-radius:8px;padding:1.3rem;margin-bottom:1rem}
+.contacts-title{font-family:'Inter',sans-serif;font-weight:700;color:var(--primary);margin-bottom:.75rem;font-size:.95rem;text-transform:uppercase;letter-spacing:0.5px}
+.contacts-list{list-style:none}
+.contacts-list li{font-size:.9rem;color:var(--text);margin-bottom:.5rem}
+.contacts-list li b{color:var(--text-muted);font-weight:500;margin-right:.4rem}
+.contacts-list a{color:var(--primary);text-decoration:none;transition:opacity .2s}
+.contacts-list a:hover{opacity:.7}
+.important-box{background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.2);border-radius:8px;padding:1.2rem;margin-bottom:1.5rem}
+.important-title{font-family:'Inter',sans-serif;font-weight:700;color:var(--primary);margin-bottom:.75rem;font-size:.95rem;text-transform:uppercase;letter-spacing:0.5px}
+
+/* Modal buttons */
+.modal-btn-row{display:flex;gap:.75rem;justify-content:center}
+.modal-btn-back{background:transparent;border:1px solid var(--border);color:var(--text);padding:.75rem 2rem;border-radius:8px;font-family:'Inter',sans-serif;font-weight:600;font-size:.9rem;letter-spacing:0.5px;cursor:pointer;transition:all .3s;text-transform:uppercase}
+.modal-btn-back:hover{border-color:var(--primary);background:rgba(212,175,55,0.08);box-shadow:0 4px 12px rgba(212,175,55,0.15)}
+.modal-btn-continue{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#1a1f2e;border:none;padding:.8rem 2rem;border-radius:8px;font-family:'Inter',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:0.5px;cursor:pointer;transition:all .3s;box-shadow:0 4px 12px rgba(212,175,55,0.25);text-transform:uppercase;position:relative;overflow:hidden}
+.modal-btn-continue::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(255,255,255,0.1));opacity:0;animation:none}
+.modal-btn-continue:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(212,175,55,0.35);letter-spacing:1px}
+.modal-btn-green{background:linear-gradient(135deg,var(--accent-green),#0ea55e);color:#1a1f2e;border:none;padding:.8rem 2rem;border-radius:8px;font-family:'Inter',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:0.5px;cursor:pointer;transition:all .3s;box-shadow:0 4px 12px rgba(16,185,129,0.25);text-transform:uppercase}
+.modal-btn-green:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(16,185,129,0.35);letter-spacing:1px}
+.modal-btn-close{background:transparent;border:1px solid var(--border);color:var(--text);padding:.75rem 2.2rem;border-radius:8px;font-family:'Inter',sans-serif;font-weight:600;font-size:.9rem;cursor:pointer;transition:all .3s;text-transform:uppercase}
+.modal-btn-close:hover{background:rgba(212,175,55,0.08);border-color:var(--primary);box-shadow:0 4px 12px rgba(212,175,55,0.15)}
+
+/* Step indicator */
+.step-indicator{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:1.5rem}
+.step-dot{width:8px;height:8px;border-radius:50%;background:rgba(212,175,55,0.2);transition:background .3s}
+.step-dot.active{background:var(--primary);box-shadow:0 0 8px rgba(212,175,55,0.4)}
+.step-dot.done{background:var(--primary);opacity:.5}
+
+.urgency-badge{display:inline-block;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#000;padding:.35rem 1rem;border-radius:20px;font-family:'Inter',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:0.5px;text-transform:uppercase}
+.btn-main:hover{animation:buttonGlow .6s ease-in-out}
+.nav-buy:hover{animation:buttonGlow .6s ease-in-out}
+
+/* TESTIMONIALS */
+.testimonials-header{text-align:center;max-width:700px;margin:0 auto 3rem}
+.testimonials-stats{display:flex;justify-content:center;gap:3rem;margin:2rem 0 3rem;flex-wrap:wrap}
+.test-stat{text-align:center}
+.test-stat-num{font-family:'Inter',sans-serif;font-weight:900;font-size:2rem;color:var(--primary)}
+.test-stat-label{font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;font-weight:600;margin-top:4px}
+.testimonials-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.2rem;margin-bottom:2rem}
+.test-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.5rem;transition:all .25s ease}
+.test-card:hover{border-color:var(--primary);transform:translateY(-3px);box-shadow:0 6px 20px rgba(212,175,55,0.12)}
+.test-card-header{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem}
+.test-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,rgba(212,175,55,0.2),rgba(212,175,55,0.05));border:1.5px solid var(--primary);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;color:var(--primary);flex-shrink:0}
+.test-name{font-family:'Inter',sans-serif;font-weight:700;font-size:.9rem;color:#fff}
+.test-meta{font-size:.7rem;color:var(--text-muted)}
+.test-stars{color:var(--primary);font-size:.8rem;letter-spacing:2px;margin-bottom:.5rem}
+.test-text{font-size:.88rem;color:var(--text-muted);line-height:1.7}
+.test-source{display:inline-flex;align-items:center;gap:.4rem;margin-top:.75rem;font-size:.7rem;color:var(--text-dim);letter-spacing:0.5px;font-weight:600;text-transform:uppercase}
+.test-source::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent-green)}
+.test-load-more{display:block;margin:2rem auto 0;background:transparent;border:1.5px solid var(--primary);color:var(--primary);padding:.8rem 2.5rem;border-radius:6px;font-family:'Inter',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;transition:all .25s;text-transform:uppercase;letter-spacing:0.5px}
+.test-load-more:hover{background:rgba(212,175,55,0.1);box-shadow:0 0 15px rgba(212,175,55,0.2)}
+
+/* EDUCATION */
+.edu-hero{text-align:center;padding:3rem 0 4rem;border-bottom:1px solid var(--border);margin-bottom:4rem}
+.steps-section{margin-bottom:5rem}
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-top:2.5rem}
+.step-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:2rem 1.5rem;text-align:center;position:relative;transition:all .25s}
+.step-card:hover{border-color:var(--primary);transform:translateY(-4px);box-shadow:0 8px 24px rgba(212,175,55,0.12)}
+.step-num{font-family:'Inter',sans-serif;font-weight:900;font-size:2.5rem;color:rgba(212,175,55,0.15);position:absolute;top:10px;right:16px}
+.step-icon{font-size:2.2rem;margin-bottom:1rem}
+.step-title{font-family:'Inter',sans-serif;font-weight:700;font-size:.95rem;color:#fff;margin-bottom:.5rem}
+.step-desc{font-size:.85rem;color:var(--text-muted);line-height:1.6}
+.edu-section{margin-bottom:4rem}
+.edu-section-title{font-family:'Inter',sans-serif;font-weight:800;font-size:1.6rem;color:#fff;margin-bottom:.5rem;display:flex;align-items:center;gap:.75rem}
+.edu-section-title span{font-size:1.3rem}
+.edu-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-top:1.5rem}
+.edu-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:2rem;transition:all .25s}
+.edu-card:hover{border-color:var(--primary);transform:translateY(-3px);box-shadow:0 6px 20px rgba(212,175,55,0.12)}
+.edu-card h4{font-family:'Inter',sans-serif;font-weight:700;font-size:1rem;color:#fff;margin-bottom:.75rem}
+.edu-card p{font-size:.88rem;color:var(--text-muted);line-height:1.7}
+.edu-card ul{list-style:none;margin-top:.75rem}
+.edu-card ul li{font-size:.85rem;color:var(--text-muted);padding:.3rem 0;display:flex;align-items:flex-start;gap:.5rem}
+.edu-card ul li::before{content:'◆';color:var(--primary);font-size:.5rem;margin-top:5px;flex-shrink:0}
+.glossary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-top:1.5rem}
+.glossary-item{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.2rem}
+.glossary-term{font-family:'Inter',sans-serif;font-weight:700;font-size:.9rem;color:var(--primary);margin-bottom:.3rem}
+.glossary-def{font-size:.82rem;color:var(--text-muted);line-height:1.6}
+
+/* DETAILED FEATURES */
+.features-detail{margin-top:3rem;padding-top:2.5rem;border-top:1px solid var(--border)}
+.features-detail-title{font-family:'Inter',sans-serif;font-weight:800;font-size:1.4rem;color:#fff;text-align:center;margin-bottom:2rem}
+.feat-detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.feat-detail-card{background:rgba(212,175,55,0.03);border:1px solid var(--border);border-radius:10px;padding:1.8rem;transition:all .25s}
+.feat-detail-card:hover{border-color:var(--primary);box-shadow:0 4px 16px rgba(212,175,55,0.1)}
+.feat-detail-card h4{font-family:'Inter',sans-serif;font-weight:700;font-size:.95rem;color:#fff;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+.feat-detail-card h4 span{font-size:1.1rem}
+.feat-detail-card p{font-size:.85rem;color:var(--text-muted);line-height:1.7}
+
+/* LEGAL */
+.legal-nav{display:flex;gap:.5rem;margin-bottom:2.5rem;flex-wrap:wrap}
+.legal-tab{background:rgba(212,175,55,0.05);border:1px solid var(--border);color:var(--text-muted);padding:.6rem 1.2rem;border-radius:6px;font-family:'Inter',sans-serif;font-weight:600;font-size:.8rem;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:0.5px}
+.legal-tab:hover,.legal-tab.active{border-color:var(--primary);color:var(--primary);background:rgba(212,175,55,0.1)}
+.legal-section{display:none}
+.legal-section.active{display:block}
+.legal-section h3{font-family:'Inter',sans-serif;font-weight:700;font-size:1.2rem;color:#fff;margin:2rem 0 1rem}
+.legal-section h3:first-child{margin-top:0}
+.legal-section p,.legal-section li{font-size:.9rem;color:var(--text-muted);line-height:1.8;margin-bottom:.75rem}
+.legal-section ul{list-style:none;margin-bottom:1rem}
+.legal-section ul li{padding:.3rem 0;display:flex;align-items:flex-start;gap:.5rem}
+.legal-section ul li::before{content:'•';color:var(--primary);font-weight:700;flex-shrink:0}
+.legal-section .cftc-box{background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.2);border-radius:8px;padding:1.5rem;margin:1.5rem 0;font-size:.82rem;color:var(--text-muted);line-height:1.7;text-transform:uppercase;letter-spacing:0.3px}
+.legal-updated{font-size:.75rem;color:var(--text-dim);font-style:italic;margin-top:2rem}
+
+/* ===== LOADING SPINNER ===== */
+.page-loader{position:fixed;inset:0;z-index:99999;background:var(--bg-dark);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s,visibility .5s}
+.page-loader.hidden{opacity:0;visibility:hidden}
+.loader-logo{width:60px;height:60px;margin-bottom:1.5rem;animation:loaderPulse 1.2s ease-in-out infinite}
+@keyframes loaderPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.7}}
+.loader-bar{width:200px;height:3px;background:rgba(212,175,55,.15);border-radius:3px;overflow:hidden}
+.loader-bar-fill{height:100%;width:0;background:var(--primary);border-radius:3px;animation:loaderFill 1.5s ease forwards}
+@keyframes loaderFill{to{width:100%}}
+
+/* ===== BACK TO TOP ===== */
+.back-to-top{position:fixed;bottom:2rem;right:2rem;width:44px;height:44px;border-radius:50%;background:var(--primary);color:var(--bg-dark);border:none;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all .3s;z-index:9990;box-shadow:0 4px 15px rgba(212,175,55,.3)}
+.back-to-top.visible{opacity:1;visibility:visible}
+.back-to-top:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(212,175,55,.5)}
+
+/* ===== WHATSAPP FLOAT ===== */
+.whatsapp-float{position:fixed;bottom:2rem;left:2rem;width:52px;height:52px;border-radius:50%;background:#25d366;color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:9990;box-shadow:0 4px 15px rgba(37,211,102,.4);transition:transform .3s,box-shadow .3s;text-decoration:none;animation:waFloat 2s ease-in-out infinite}
+.whatsapp-float:hover{animation:none;transform:scale(1.1);box-shadow:0 6px 25px rgba(37,211,102,.6)}
+@keyframes waFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.whatsapp-float svg{width:28px;height:28px;fill:#fff}
+.whatsapp-float .wa-tooltip{position:absolute;left:calc(100% + 10px);background:#1a1f2e;color:#fff;padding:.5rem .8rem;border-radius:8px;font-size:.75rem;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .3s;font-family:'Inter',sans-serif}
+.whatsapp-float:hover .wa-tooltip{opacity:1}
+
+/* ===== STICKY MOBILE CTA ===== */
+.mobile-cta-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:9980;background:linear-gradient(135deg,#0f1419 0%,#1a1f2e 100%);border-top:1px solid rgba(212,175,55,.3);padding:.7rem 1rem;align-items:center;justify-content:space-between;gap:.8rem;backdrop-filter:blur(10px)}
+.mobile-cta-bar .mcta-price{font-family:'Inter',sans-serif;font-weight:800;color:var(--primary);font-size:1.1rem}
+.mobile-cta-bar .mcta-label{font-size:.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
+.mobile-cta-bar .mcta-btn{flex:1;max-width:200px;padding:.7rem 1.2rem;background:var(--primary);color:var(--bg-dark);border:none;border-radius:8px;font-family:'Inter',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;text-align:center}
+@media(max-width:768px){
+  .mobile-cta-bar{display:flex}
+  .back-to-top{bottom:5.5rem;right:1rem;width:38px;height:38px;font-size:1rem}
+  .whatsapp-float{bottom:5.5rem;left:1rem;width:46px;height:46px}
+  .whatsapp-float svg{width:24px;height:24px}
+  footer{padding-bottom:4rem}
+  .page{padding-bottom:3.5rem}
+}
+
+/* ===== THEME TOGGLE ===== */
+.theme-toggle{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all .3s;margin-right:.5rem;flex-shrink:0}
+.theme-toggle:hover{border-color:var(--primary);color:var(--primary)}
+body.light-mode{--bg-dark:#f5f5f0;--bg-card:#ffffff;--border:rgba(0,0,0,.1);--text-muted:#555;--text-dim:#888}
+body.light-mode{background:var(--bg-dark);color:#1a1a2e}
+body.light-mode nav{background:rgba(245,245,240,.95);border-bottom-color:rgba(0,0,0,.08)}
+body.light-mode .nav-links a,body.light-mode .logo-text{color:#1a1a2e}
+body.light-mode .section-title,body.light-mode h1,body.light-mode h2,body.light-mode h3,body.light-mode h4{color:#1a1a2e}
+body.light-mode .hero-desc,body.light-mode p{color:#444}
+body.light-mode .bg-card,body.light-mode .result-card,body.light-mode .feat-detail-card,body.light-mode .edu-card,body.light-mode .info-card,body.light-mode .step-card{background:#fff;border-color:rgba(0,0,0,.08)}
+body.light-mode footer{background:#eaeae5;border-color:rgba(0,0,0,.05)}
+body.light-mode .ticker-wrap{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.06)}
+body.light-mode .modal-box{background:#fff;color:#1a1a2e}
+body.light-mode .form-input,body.light-mode .form-select,body.light-mode .form-textarea{background:#f5f5f0;border-color:rgba(0,0,0,.1);color:#1a1a2e}
+
+/* ===== PAGE TRANSITIONS ===== */
+.page.active{animation:pageFadeIn .4s ease forwards}
+@keyframes pageFadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== COUNTDOWN URGENCY BANNER ===== */
+.urgency-banner{background:linear-gradient(135deg,rgba(212,175,55,.08),rgba(212,175,55,.03));border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:1.5rem 2rem;margin-bottom:2.5rem;display:flex;align-items:center;justify-content:center;gap:2rem;flex-wrap:wrap}
+.urgency-banner .ub-icon{font-size:1.8rem}
+.urgency-banner .ub-text{font-family:'Inter',sans-serif;font-weight:700;color:#fff;font-size:1rem}
+.urgency-banner .ub-text span{color:var(--primary)}
+.urgency-timer{display:flex;gap:.5rem}
+.urgency-timer .ut-block{background:var(--bg-dark);border:1px solid var(--border);border-radius:8px;padding:.5rem .7rem;text-align:center;min-width:52px}
+.urgency-timer .ut-num{font-family:'Inter',sans-serif;font-weight:800;font-size:1.3rem;color:var(--primary);display:block}
+.urgency-timer .ut-label{font-size:.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
+
+/* ===== LIVE TRADE FEED ===== */
+.trade-feed{margin:3rem 0;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.trade-feed-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid var(--border)}
+.trade-feed-header h3{font-family:'Inter',sans-serif;font-weight:700;font-size:1rem;color:#fff;margin:0;display:flex;align-items:center;gap:.5rem}
+.trade-feed-header .tf-live{width:8px;height:8px;border-radius:50%;background:#10b981;animation:livePulse 1.5s infinite}
+@keyframes livePulse{0%,100%{opacity:1}50%{opacity:.4}}
+.trade-feed-body{max-height:300px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--primary) transparent}
+.trade-feed-body::-webkit-scrollbar{width:4px}
+.trade-feed-body::-webkit-scrollbar-thumb{background:var(--primary);border-radius:4px}
+.trade-row{display:grid;grid-template-columns:1fr auto auto auto;gap:1rem;align-items:center;padding:.7rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.03);font-size:.85rem;transition:background .2s}
+.trade-row:hover{background:rgba(212,175,55,.03)}
+.trade-row .tr-pair{font-family:'Inter',sans-serif;font-weight:600;color:#fff}
+.trade-row .tr-type{padding:.2rem .6rem;border-radius:4px;font-size:.7rem;font-weight:700;text-transform:uppercase;font-family:'Inter',sans-serif}
+.trade-row .tr-type.buy{background:rgba(16,185,129,.15);color:#10b981}
+.trade-row .tr-type.sell{background:rgba(239,68,68,.15);color:#ef4444}
+.trade-row .tr-profit{font-family:'Inter',sans-serif;font-weight:700;font-size:.85rem}
+.trade-row .tr-profit.pos{color:#10b981}
+.trade-row .tr-profit.neg{color:#ef4444}
+.trade-row .tr-time{color:var(--text-dim);font-size:.75rem}
+@media(max-width:600px){.trade-row{grid-template-columns:1fr auto auto;font-size:.78rem}.trade-row .tr-time{display:none}}
+
+/* ===== BEFORE/AFTER EQUITY ===== */
+.equity-compare{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin:3rem 0}
+.equity-compare-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center}
+.equity-compare-card .ecc-label{font-family:'Inter',sans-serif;font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;display:inline-block;padding:.3rem .8rem;border-radius:20px}
+.equity-compare-card.before .ecc-label{color:#ef4444;background:rgba(239,68,68,.1)}
+.equity-compare-card.after .ecc-label{color:#10b981;background:rgba(16,185,129,.1)}
+.equity-compare-card .ecc-amount{font-family:'Inter',sans-serif;font-weight:800;font-size:2rem;margin:.5rem 0}
+.equity-compare-card.before .ecc-amount{color:var(--text-muted)}
+.equity-compare-card.after .ecc-amount{color:var(--primary)}
+.equity-compare-card .ecc-note{font-size:.8rem;color:var(--text-dim)}
+@media(max-width:600px){.equity-compare{grid-template-columns:1fr}}
+
+/* ===== MYFXBOOK PLACEHOLDER ===== */
+.myfxbook-embed{margin:3rem 0;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:2rem;text-align:center}
+.myfxbook-embed .mfx-icon{font-size:2.5rem;margin-bottom:1rem}
+.myfxbook-embed h3{font-family:'Inter',sans-serif;font-weight:700;font-size:1.1rem;color:#fff;margin-bottom:.5rem}
+.myfxbook-embed p{font-size:.85rem;color:var(--text-muted);max-width:500px;margin:0 auto .5rem}
+.myfxbook-embed .mfx-badge{display:inline-block;padding:.4rem 1rem;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.25);border-radius:20px;font-family:'Inter',sans-serif;font-weight:600;font-size:.75rem;color:var(--primary);margin-top:1rem}
+
+/* ===== HIGHLIGHT TESTIMONIALS ===== */
+.highlight-testimonials{margin:3rem 0}
+.highlight-testimonials>h3{font-family:'Inter',sans-serif;font-weight:700;font-size:1.3rem;color:#fff;margin-bottom:1.5rem;text-align:center}
+.highlight-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem}
+.highlight-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:transform .3s,border-color .3s}
+.highlight-card:hover{transform:translateY(-3px);border-color:rgba(212,175,55,.3)}
+.hl-top{position:relative;padding:1.5rem 1.5rem 1rem;background:linear-gradient(135deg,rgba(212,175,55,.06),rgba(212,175,55,.02))}
+.hl-quote-icon{position:absolute;top:.8rem;right:1rem;font-size:2.5rem;color:rgba(212,175,55,.12);font-family:Georgia,serif;line-height:1}
+.hl-pair{display:inline-block;background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.3);padding:.15rem .6rem;border-radius:4px;font-family:'Inter',sans-serif;font-size:.7rem;color:var(--primary);font-weight:700;letter-spacing:.5px;margin-bottom:.75rem}
+.hl-highlight{font-family:'Inter',sans-serif;font-weight:800;font-size:1.4rem;color:#fff;line-height:1.3;margin-bottom:.5rem}
+.hl-highlight em{font-style:normal;color:var(--primary)}
+.hl-stats-row{display:flex;gap:1rem;margin-top:1rem}
+.hl-stat{background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:6px;padding:.5rem .7rem;text-align:center;flex:1}
+.hl-stat-val{font-family:'Inter',sans-serif;font-weight:800;font-size:1rem;color:var(--accent-green)}
+.hl-stat-label{font-size:.6rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.hl-body{padding:1rem 1.5rem 1.5rem}
+.hl-text{font-size:.88rem;color:var(--text-muted);line-height:1.7;margin-bottom:1rem;font-style:italic}
+.hl-author{display:flex;align-items:center;gap:.75rem}
+.hl-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,rgba(212,175,55,.2),rgba(212,175,55,.05));border:1.5px solid var(--primary);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:var(--primary);flex-shrink:0}
+.hl-author-info .hl-name{font-family:'Inter',sans-serif;font-weight:700;font-size:.85rem;color:#fff}
+.hl-author-info .hl-loc{font-size:.7rem;color:var(--text-dim)}
+.hl-badge{display:inline-flex;align-items:center;gap:.3rem;margin-left:auto;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);padding:.2rem .6rem;border-radius:12px;font-family:'Inter',sans-serif;font-size:.6rem;color:var(--accent-green);font-weight:600;letter-spacing:.3px;text-transform:uppercase;flex-shrink:0}
+.hl-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--accent-green)}
+
+/* ===== FAQ ACCORDION ===== */
+.faq-accordion{margin-top:1.5rem}
+.faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.5rem;overflow:hidden;transition:border-color .3s}
+.faq-item.open{border-color:rgba(212,175,55,.3)}
+.faq-question{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.2rem;cursor:pointer;background:var(--bg-card);transition:background .3s}
+.faq-question:hover{background:rgba(212,175,55,.05)}
+.faq-question span{font-size:.88rem;color:var(--primary);font-weight:600;flex:1}
+.faq-question .faq-arrow{font-size:.7rem;color:var(--text-muted);transition:transform .3s;margin-left:.5rem}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+.faq-answer{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.faq-answer-inner{padding:0 1.2rem 1rem;font-size:.85rem;color:var(--text-muted);line-height:1.7}
+</style>
+</head>
+<body>
+
+<!-- LOADING SPINNER -->
+<div class="page-loader" id="pageLoader">
+  <div class="loader-logo"><svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="ldGrad" x1="0" y1="0" x2="26" y2="26"><stop offset="0%" stop-color="#f0d060"/><stop offset="100%" stop-color="#b8941e"/></linearGradient></defs><path d="M4 8l9-5 9 5v10l-9 5-9-5V8z" fill="rgba(212,175,55,0.08)" stroke="url(#ldGrad)" stroke-width="1.2"/><path d="M8 12l3 4 7-8" stroke="url(#ldGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+<nav>
+  <a href="#" class="logo" onclick="showPage('home');return false">
+    <div class="logo-icon"><svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs><linearGradient id="lgGrad" x1="0" y1="0" x2="26" y2="26"><stop offset="0%" stop-color="#f0d060"/><stop offset="100%" stop-color="#b8941e"/></linearGradient></defs>
+<path d="M4 8l9-5 9 5v10l-9 5-9-5V8z" fill="rgba(212,175,55,0.08)" stroke="url(#lgGrad)" stroke-width="1.2"/>
+<path d="M8 12l3 4 7-8" stroke="url(#lgGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg></div>
+    <div class="logo-text">Smart Quant Algo<span>Automated Trading Systems</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a class="active" id="nav-home" onclick="showPage('home')">Home</a></li>
+    <li><a id="nav-about" onclick="showPage('about')">About Us</a></li>
+    <li><a id="nav-products" onclick="showPage('products')">Products</a></li>
+    <li><a id="nav-results" onclick="showPage('results')">Results</a></li>
+    <li><a id="nav-reviews" onclick="showPage('reviews')">Reviews</a></li>
+    <li><a id="nav-learn" onclick="showPage('learn')">Learn</a></li>
+    <li><a id="nav-contact" onclick="showPage('contact')">Contact</a></li>
+  </ul>
+  <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+  <a href="#" class="nav-buy" onclick="openPaymentModal(349);return false">BUY NOW</a>
+  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="tickerInner">
+  </div>
+</div>
+
+<!-- ==================== HOME ==================== -->
+<div id="home" class="page active">
+  <div class="hero">
+    <div>
+      <div class="live-badge"><div class="live-dot"></div>Verified Live Performance</div>
+      <h1 class="hero-title">Algorithmic Trading<br><strong>Built for Real Markets</strong></h1>
+      <p class="hero-desc">Smart Quant Algo delivers <b>institutional-grade automated trading</b> for MetaTrader 5. Our EA is tested on live accounts with real capital — not optimized demo results. Trusted by traders across 30+ countries.</p>
+      <div class="hero-btns">
+        <a href="#" class="btn-main" onclick="openPaymentModal(349);return false">Get Started</a>
+        <a href="#" class="btn-outline" onclick="showPage('results');return false">View Results</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="robot-frame">
+        <span class="corner-tag tl">SYS:ONLINE</span>
+        <span class="corner-tag tr">v5.PRO</span>
+        <span class="corner-tag bl">MT5:ACTIVE</span>
+        <span class="corner-tag br">AI:ENABLED</span>
+        <div class="robot-inner">
+          <div class="robot-svg"><svg viewBox="0 0 380 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#d4af37" stop-opacity=".35"/><stop offset="100%" stop-color="#d4af37" stop-opacity="0"/></linearGradient>
+<linearGradient id="barGreen" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#059669"/></linearGradient>
+<linearGradient id="barRed" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f87171"/><stop offset="100%" stop-color="#dc2626"/></linearGradient>
+<linearGradient id="goldLine" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#b8941e"/><stop offset="100%" stop-color="#f0d060"/></linearGradient>
+<filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<!-- Grid lines -->
+<line x1="30" y1="35" x2="360" y2="35" stroke="#1e2d42" stroke-width=".5"/>
+<line x1="30" y1="65" x2="360" y2="65" stroke="#1e2d42" stroke-width=".5"/>
+<line x1="30" y1="95" x2="360" y2="95" stroke="#1e2d42" stroke-width=".5"/>
+<line x1="30" y1="125" x2="360" y2="125" stroke="#1e2d42" stroke-width=".5"/>
+<line x1="30" y1="155" x2="360" y2="155" stroke="#1e2d42" stroke-width=".5"/>
+<!-- Y-axis labels -->
+<text x="8" y="38" fill="#506580" font-family="Inter" font-size="7" font-weight="500">2420</text>
+<text x="8" y="68" fill="#506580" font-family="Inter" font-size="7" font-weight="500">2380</text>
+<text x="8" y="98" fill="#506580" font-family="Inter" font-size="7" font-weight="500">2340</text>
+<text x="8" y="128" fill="#506580" font-family="Inter" font-size="7" font-weight="500">2300</text>
+<text x="8" y="158" fill="#506580" font-family="Inter" font-size="7" font-weight="500">2260</text>
+<!-- Candlesticks -->
+<line x1="48" y1="82" x2="48" y2="120" stroke="#506580" stroke-width=".8"/>
+<rect x="44" y="90" width="8" height="22" rx="1" fill="url(#barGreen)"/>
+<line x1="68" y1="75" x2="68" y2="115" stroke="#506580" stroke-width=".8"/>
+<rect x="64" y="80" width="8" height="25" rx="1" fill="url(#barGreen)"/>
+<line x1="88" y1="65" x2="88" y2="108" stroke="#506580" stroke-width=".8"/>
+<rect x="84" y="70" width="8" height="28" rx="1" fill="url(#barGreen)"/>
+<line x1="108" y1="55" x2="108" y2="95" stroke="#506580" stroke-width=".8"/>
+<rect x="104" y="62" width="8" height="20" rx="1" fill="url(#barRed)"/>
+<line x1="128" y1="60" x2="128" y2="100" stroke="#506580" stroke-width=".8"/>
+<rect x="124" y="65" width="8" height="25" rx="1" fill="url(#barRed)"/>
+<line x1="148" y1="55" x2="148" y2="98" stroke="#506580" stroke-width=".8"/>
+<rect x="144" y="60" width="8" height="30" rx="1" fill="url(#barGreen)"/>
+<line x1="168" y1="42" x2="168" y2="82" stroke="#506580" stroke-width=".8"/>
+<rect x="164" y="48" width="8" height="24" rx="1" fill="url(#barGreen)"/>
+<line x1="188" y1="38" x2="188" y2="75" stroke="#506580" stroke-width=".8"/>
+<rect x="184" y="42" width="8" height="26" rx="1" fill="url(#barGreen)"/>
+<line x1="208" y1="32" x2="208" y2="68" stroke="#506580" stroke-width=".8"/>
+<rect x="204" y="40" width="8" height="18" rx="1" fill="url(#barRed)"/>
+<line x1="228" y1="38" x2="228" y2="72" stroke="#506580" stroke-width=".8"/>
+<rect x="224" y="42" width="8" height="22" rx="1" fill="url(#barGreen)"/>
+<line x1="248" y1="30" x2="248" y2="65" stroke="#506580" stroke-width=".8"/>
+<rect x="244" y="35" width="8" height="22" rx="1" fill="url(#barGreen)"/>
+<line x1="268" y1="28" x2="268" y2="58" stroke="#506580" stroke-width=".8"/>
+<rect x="264" y="32" width="8" height="18" rx="1" fill="url(#barRed)"/>
+<line x1="288" y1="25" x2="288" y2="55" stroke="#506580" stroke-width=".8"/>
+<rect x="284" y="28" width="8" height="20" rx="1" fill="url(#barGreen)"/>
+<line x1="308" y1="20" x2="308" y2="50" stroke="#506580" stroke-width=".8"/>
+<rect x="304" y="22" width="8" height="22" rx="1" fill="url(#barGreen)"/>
+<!-- Equity curve overlay -->
+<path d="M44 112 L64 105 L84 98 L104 82 L124 90 L144 90 L164 72 L184 68 L204 58 L224 64 L244 57 L264 50 L284 48 L304 44 L340 30" fill="none" stroke="url(#goldLine)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+<path d="M44 112 L64 105 L84 98 L104 82 L124 90 L144 90 L164 72 L184 68 L204 58 L224 64 L244 57 L264 50 L284 48 L304 44 L340 30 V160 H44 Z" fill="url(#chartGrad)"/>
+<!-- Current price dot -->
+<circle cx="340" cy="30" r="4" fill="#d4af37" filter="url(#glow)">
+<animate attributeName="r" values="3;5;3" dur="2s" repeatCount="indefinite"/>
+</circle>
+<!-- Trade markers -->
+<g opacity=".9">
+<polygon points="144,88 148,82 152,88" fill="#34d399"/><text x="139" y="96" fill="#34d399" font-family="Inter" font-size="6" font-weight="700">BUY</text>
+<polygon points="264,48 268,42 272,48" fill="#34d399"/><text x="259" y="56" fill="#34d399" font-family="Inter" font-size="6" font-weight="700">BUY</text>
+<polygon points="204,60 208,66 212,60" fill="#f87171"/><text x="200" y="74" fill="#f87171" font-family="Inter" font-size="6" font-weight="700">TP</text>
+</g>
+<!-- Bottom stat bar -->
+<rect x="30" y="170" width="330" height="24" rx="4" fill="#0d1520" stroke="#1e2d42" stroke-width=".5"/>
+<text x="42" y="185" fill="#d4af37" font-family="Inter" font-size="7.5" font-weight="700">XAUUSD</text>
+<text x="95" y="185" fill="#94a3b8" font-family="Inter" font-size="7">P/L:</text>
+<text x="112" y="185" fill="#34d399" font-family="Inter" font-size="7.5" font-weight="700">+$4,287.50</text>
+<text x="180" y="185" fill="#94a3b8" font-family="Inter" font-size="7">Trades:</text>
+<text x="208" y="185" fill="#e2e8f0" font-family="Inter" font-size="7.5" font-weight="600">1,847</text>
+<text x="250" y="185" fill="#94a3b8" font-family="Inter" font-size="7">Win:</text>
+<text x="268" y="185" fill="#34d399" font-family="Inter" font-size="7.5" font-weight="700">93.2%</text>
+<text x="305" y="185" fill="#94a3b8" font-family="Inter" font-size="7">DD:</text>
+<text x="320" y="185" fill="#f87171" font-family="Inter" font-size="7.5" font-weight="600">6.8%</text>
+<!-- LIVE badge -->
+<rect x="320" y="8" width="40" height="16" rx="3" fill="rgba(16,185,129,0.15)" stroke="#10b981" stroke-width=".8"/>
+<circle cx="330" cy="16" r="3" fill="#10b981"><animate attributeName="opacity" values="1;.4;1" dur="1.5s" repeatCount="indefinite"/></circle>
+<text x="336" y="20" fill="#10b981" font-family="Inter" font-size="7" font-weight="700">LIVE</text>
+<!-- Header -->
+<text x="32" y="18" fill="#d4af37" font-family="Inter" font-size="8" font-weight="700" letter-spacing=".5">SQA PRO EA</text>
+<text x="32" y="27" fill="#506580" font-family="Inter" font-size="6.5">Equity Growth • 12 Month Performance</text>
+</svg></div>
+          <div class="robot-stats">
+            <div class="r-stat"><div class="r-stat-val">93%</div><div class="r-stat-label">Win Rate</div></div>
+            <div class="r-stat"><div class="r-stat-val">2.38</div><div class="r-stat-label">Prof. Factor</div></div>
+            <div class="r-stat"><div class="r-stat-val">24/7</div><div class="r-stat-label">Active</div></div>
+            <div class="r-stat"><div class="r-stat-val">&lt;10%</div><div class="r-stat-label">Max DD</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="stats-bar fade-in">
+    <div class="stat-cell"><span class="stat-num" data-to="93">0</span><span class="stat-label">Win Rate %</span></div>
+    <div class="stat-cell"><span class="stat-num" data-to="12">0</span><span class="stat-label">Currency Pairs</span></div>
+    <div class="stat-cell"><span class="stat-num" data-to="1847">0</span><span class="stat-label">Total Trades</span></div>
+    <div class="stat-cell"><span class="stat-num" data-to="30">0</span><span class="stat-label">Countries</span></div>
+  </div>
+  <div style="padding:5rem 5%;background:var(--bg-dark)">
+    <div style="text-align:center;max-width:600px;margin:0 auto 3rem" class="fade-in">
+      <p class="section-label"> why smart quant algo</p>
+      <h2 class="section-title">Built Different. <span>Proven Live.</span></h2>
+      <p class="section-desc" style="margin:0 auto">Every decision in our algorithm is backed by 5+ years of tick data analysis. We don't sell backtested dreams — we deliver live-verified results.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem" class="fade-in">
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:2rem;transition:all .3s" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(212,175,55,0.15)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none';this.style.boxShadow='none'">
+        <div style="font-size:2rem;margin-bottom:1rem">⚡</div>
+        <h3 style="font-family:'Inter',sans-serif;font-weight:700;font-size:1rem;color:#fff;margin-bottom:.75rem">Set & Forget Automation</h3>
+        <p style="font-size:.9rem;color:var(--text-muted);line-height:1.7">Install once. The EA handles market analysis, entry, exit, and risk management 24/5 — no screen time needed from you.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:2rem;transition:all .3s" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(212,175,55,0.15)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none';this.style.boxShadow='none'">
+        <div style="font-size:2rem;margin-bottom:1rem">🎯</div>
+        <h3 style="font-family:'Inter',sans-serif;font-weight:700;font-size:1rem;color:#fff;margin-bottom:.75rem">Multi-Layer Entry Validation</h3>
+        <p style="font-size:.9rem;color:var(--text-muted);line-height:1.7">Each trade passes through trend, momentum, and volatility filters. Only high-probability setups with favorable risk-reward ratios are executed.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:2rem;transition:all .3s" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(212,175,55,0.15)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none';this.style.boxShadow='none'">
+        <div style="font-size:2rem;margin-bottom:1rem">🛡️</div>
+        <h3 style="font-family:'Inter',sans-serif;font-weight:700;font-size:1rem;color:#fff;margin-bottom:.75rem">Strict Risk Management</h3>
+        <p style="font-size:.9rem;color:var(--text-muted);line-height:1.7">Every position has a hard stop-loss. Dynamic lot sizing, daily drawdown limits, and circuit breakers keep your account protected at all times.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:2rem;transition:all .3s" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(212,175,55,0.15)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none';this.style.boxShadow='none'">
+        <div style="font-size:2rem;margin-bottom:1rem">📈</div>
+        <h3 style="font-family:'Inter',sans-serif;font-weight:700;font-size:1rem;color:#fff;margin-bottom:.75rem">Prop Firm Compatible</h3>
+        <p style="font-size:.9rem;color:var(--text-muted);line-height:1.7">Designed to respect strict drawdown rules required by FTMO, The Funded Trader, and other prop firm evaluation programs.</p>
+      </div>
+    </div>
+  </div>
+  <div style="padding:4rem 5%;background:rgba(212,175,55,0.05);border-top:1px solid var(--border);border-bottom:1px solid var(--border);text-align:center" class="fade-in">
+    <h2 style="font-family:'Inter',sans-serif;font-weight:800;font-size:2rem;color:#fff;margin-bottom:1rem">Start Trading with a Proven System</h2>
+    <p style="color:var(--text-muted);margin-bottom:2rem;font-size:1rem">Join traders in 30+ countries who trust SQA Pro EA for consistent, automated trading performance.</p>
+    <a href="#" class="btn-main" onclick="openPaymentModal(349);return false">Get The EA Now →</a>
+  </div>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand"><div class="logo-text-f">Smart Quant Algo</div><p>Institutional-grade automated trading systems for XAUUSD and major Forex pairs.</p></div>
+      <div class="footer-col"><h4>Navigation</h4><ul><li><a onclick="showPage('home')">Home</a></li><li><a onclick="showPage('about')">About Us</a></li><li><a onclick="showPage('products')">Products</a></li><li><a onclick="showPage('results')">Results</a></li><li><a onclick="showPage('reviews')">Reviews</a></li><li><a onclick="showPage('learn')">Learn</a></li><li><a onclick="showPage('contact')">Contact</a></li></ul></div>
+      <div class="footer-col"><h4>Products</h4><ul><li><a onclick="showPage('products')">SQA Pro EA</a></li><li><a onclick="openPaymentModal(349)">Annual $349/yr</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Smart Quant Algo. All rights reserved.</p><p>MT5 // MQL5 // XAUUSD // FOREX</p></div>
+    <p class="risk-warning">Risk Disclaimer: Trading foreign exchange on margin carries a high level of risk and may not be suitable for all investors. Past performance is not indicative of future results.</p>
+  </footer>
+</div>
+
+<!-- ==================== ABOUT ==================== -->
+<div id="about" class="page">
+  <div style="padding:5rem 5%">
+    <div class="fade-in">
+      <p class="section-label">Who we are</p>
+      <h2 class="section-title">About <span>Smart Quant Algo</span></h2>
+      <p class="section-desc">We are a team of quantitative developers and experienced traders specializing in algorithmic systems for MetaTrader 5. Every parameter in our EA is calibrated against real market conditions — not curve-fitted to historical data.</p>
+    </div>
+    <div class="about-grid">
+      <div class="fade-in" style="display:flex;align-items:center;justify-content:center">
+        <div class="about-hexagon">
+          <div class="orbit-ring"><div class="orbit-dot"></div></div>
+          <div class="orbit-ring2"></div>
+          <div class="hex-bg"><div class="hex-center-icon"><svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="chipGrad" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+<stop offset="0%" stop-color="#d4af37" stop-opacity=".25"/>
+<stop offset="100%" stop-color="#b8941e" stop-opacity=".08"/>
+</linearGradient>
+<linearGradient id="coreGrad" x1="42" y1="42" x2="78" y2="78" gradientUnits="userSpaceOnUse">
+<stop offset="0%" stop-color="#f0d060"/>
+<stop offset="100%" stop-color="#b8941e"/>
+</linearGradient>
+<filter id="chipGlow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<!-- Outer chip body -->
+<rect x="22" y="22" width="76" height="76" rx="8" fill="url(#chipGrad)" stroke="#d4af37" stroke-width="1"/>
+<!-- Circuit traces - top -->
+<line x1="38" y1="22" x2="38" y2="10" stroke="#d4af37" stroke-width="1.2" opacity=".6"/>
+<line x1="52" y1="22" x2="52" y2="10" stroke="#d4af37" stroke-width="1.2" opacity=".6"/>
+<line x1="68" y1="22" x2="68" y2="10" stroke="#d4af37" stroke-width="1.2" opacity=".6"/>
+<line x1="82" y1="22" x2="82" y2="10" stroke="#d4af37" stroke-width="1.2" opacity=".6"/>
+<!-- Circuit traces - bottom -->
+<line x1="38" y1="98" x2="38" y2="110" stroke="#d4af37" stroke-width="1.2" opacity=".6"/>
+<line x1="52" y1="98" x2="52" y2="110" stroke="#d4af37" stroke-width="1.2" opacity=".6"/>
+<line x1="68" y1="98" x2="68" y2="110" stroke="#d4af37" stroke-width="1.2" opacity=".6"/>
+<line x1="82" y1="98" x2="82" y2="110" stroke="#d4af37" stroke-width="1.2" opacity=".6"/>
+<!-- Circuit traces - left -->
+<line x1="22" y1="38" x2="10" y2="38" stroke="#d4af37" stroke-width="1.2" opacity=".6"/>
+<line x1="22" y1="52" x2="10" y2="52" stroke="#d4af37" stroke-width="1.2" opacity=".6"/>
+<line x1="22" y1="68" x2="10" y2="68" stroke="#d4af37" stroke-width="1.2" opacity=".6"/>
+<line x1="22" y1="82" x2="10" y2="82" stroke="#d4af37" stroke-width="1.2" opacity=".6"/>
+<!-- Circuit traces - right -->
+<line x1="98" y1="38" x2="110" y2="38" stroke="#d4af37" stroke-width="1.2" opacity=".6"/>
+<line x1="98" y1="52" x2="110" y2="52" stroke="#d4af37" stroke-width="1.2" opacity=".6"/>
+<line x1="98" y1="68" x2="110" y2="68" stroke="#d4af37" stroke-width="1.2" opacity=".6"/>
+<line x1="98" y1="82" x2="110" y2="82" stroke="#d4af37" stroke-width="1.2" opacity=".6"/>
+<!-- Pin dots -->
+<circle cx="38" cy="10" r="2" fill="#d4af37" opacity=".8"/><circle cx="52" cy="10" r="2" fill="#d4af37" opacity=".8"/>
+<circle cx="68" cy="10" r="2" fill="#d4af37" opacity=".8"/><circle cx="82" cy="10" r="2" fill="#d4af37" opacity=".8"/>
+<circle cx="38" cy="110" r="2" fill="#d4af37" opacity=".8"/><circle cx="52" cy="110" r="2" fill="#d4af37" opacity=".8"/>
+<circle cx="68" cy="110" r="2" fill="#d4af37" opacity=".8"/><circle cx="82" cy="110" r="2" fill="#d4af37" opacity=".8"/>
+<circle cx="10" cy="38" r="2" fill="#d4af37" opacity=".8"/><circle cx="10" cy="52" r="2" fill="#d4af37" opacity=".8"/>
+<circle cx="10" cy="68" r="2" fill="#d4af37" opacity=".8"/><circle cx="10" cy="82" r="2" fill="#d4af37" opacity=".8"/>
+<circle cx="110" cy="38" r="2" fill="#d4af37" opacity=".8"/><circle cx="110" cy="52" r="2" fill="#d4af37" opacity=".8"/>
+<circle cx="110" cy="68" r="2" fill="#d4af37" opacity=".8"/><circle cx="110" cy="82" r="2" fill="#d4af37" opacity=".8"/>
+<!-- Inner core -->
+<rect x="40" y="40" width="40" height="40" rx="4" fill="rgba(15,20,25,0.9)" stroke="url(#coreGrad)" stroke-width="1.5" filter="url(#chipGlow)"/>
+<!-- Inner circuit paths -->
+<path d="M30 45h8M30 55h8M30 65h8M30 75h8" stroke="#d4af37" stroke-width=".6" opacity=".4"/>
+<path d="M82 45h8M82 55h8M82 65h8M82 75h8" stroke="#d4af37" stroke-width=".6" opacity=".4"/>
+<path d="M45 30v8M55 30v8M65 30v8M75 30v8" stroke="#d4af37" stroke-width=".6" opacity=".4"/>
+<path d="M45 82v8M55 82v8M65 82v8M75 82v8" stroke="#d4af37" stroke-width=".6" opacity=".4"/>
+<!-- Core icon - chart pulse line -->
+<path d="M47 62l5-6 4 8 4-12 4 8 5-4 4 3" stroke="url(#coreGrad)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#chipGlow)"/>
+<!-- AI text in core -->
+<text x="60" y="68" text-anchor="middle" fill="#d4af37" font-family="Inter,sans-serif" font-size="5" font-weight="700" letter-spacing="1" opacity=".6">AI</text>
+<!-- Data flow animation -->
+<circle r="1.5" fill="#d4af37" opacity=".8">
+<animateMotion dur="2.5s" repeatCount="indefinite" path="M38 10 L38 22 L38 40 L48 50"/>
+</circle>
+<circle r="1.5" fill="#d4af37" opacity=".8">
+<animateMotion dur="3s" repeatCount="indefinite" path="M110 52 L98 52 L82 52 L72 55"/>
+</circle>
+<circle r="1.5" fill="#d4af37" opacity=".6">
+<animateMotion dur="2.8s" repeatCount="indefinite" path="M68 110 L68 98 L68 82 L64 70"/>
+</circle>
+<!-- Pulse on core -->
+<rect x="40" y="40" width="40" height="40" rx="4" stroke="#d4af37" stroke-width=".6" fill="none" opacity=".2">
+<animate attributeName="opacity" values=".2;.5;.2" dur="2s" repeatCount="indefinite"/>
+</rect>
+</svg></div><div class="hex-center-text">SQA</div><div class="hex-label">Algo Systems</div></div>
+        </div>
+      </div>
+      <div class="fade-in">
+        <h3 style="font-family:'Inter',sans-serif;font-weight:700;font-size:1.4rem;color:#fff;margin-bottom:1.5rem">How We Build & Validate Our Systems</h3>
+        <p style="color:var(--text-muted);font-size:1rem;line-height:1.8;margin-bottom:1.5rem">Smart Quant Algo was built to solve a real problem: most retail EAs look great on backtests but fail on live accounts. We take the opposite approach — every system is developed, validated, and deployed on live capital before it reaches your account.</p>
+        <p style="color:var(--text-muted);font-size:1rem;line-height:1.8;margin-bottom:2rem">Our development pipeline includes walk-forward optimization, Monte Carlo stress testing, and minimum 6-month forward testing on real accounts with real spreads and slippage.</p>
+        <ul class="feature-list">
+          <li><div class="feat-icon">🔬</div><div><strong style="color:#fff">Walk-Forward Tested</strong> — Every system passes walk-forward optimization on 5+ years of tick data at 99.9% modelling quality before live deployment</div></li>
+          <li><div class="feat-icon">📡</div><div><strong style="color:#fff">Live-Verified Results</strong> — All performance data is from real funded accounts with actual spreads and slippage — never demo-only results</div></li>
+          <li><div class="feat-icon">🤝</div><div><strong style="color:#fff">Dedicated Support</strong> — Private members group, 1-on-1 setup assistance, and direct access to our development team for configuration help</div></li>
+          <li><div class="feat-icon">🔄</div><div><strong style="color:#fff">Ongoing Optimization</strong> — Quarterly parameter updates based on evolving market conditions, delivered free to all active license holders</div></li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:5rem">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--border)" class="fade-in">
+        <div style="background:var(--bg-card);padding:2.5rem 2rem;text-align:center"><div style="font-family:'Inter',sans-serif;font-weight:800;font-size:2rem;color:var(--primary)">5+</div><div style="font-size:.8rem;color:var(--text-muted);letter-spacing:0.5px;text-transform:uppercase;margin-top:.5rem;font-weight:600">Years Development</div></div>
+        <div style="background:var(--bg-card);padding:2.5rem 2rem;text-align:center"><div style="font-family:'Inter',sans-serif;font-weight:800;font-size:2rem;color:var(--primary)">93%</div><div style="font-size:.8rem;color:var(--text-muted);letter-spacing:0.5px;text-transform:uppercase;margin-top:.5rem;font-weight:600">Verified Win Rate</div></div>
+        <div style="background:var(--bg-card);padding:2.5rem 2rem;text-align:center"><div style="font-family:'Inter',sans-serif;font-weight:800;font-size:2rem;color:var(--primary)">12+</div><div style="font-size:.8rem;color:var(--text-muted);letter-spacing:0.5px;text-transform:uppercase;margin-top:.5rem;font-weight:600">Currency Pairs</div></div>
+        <div style="background:var(--bg-card);padding:2.5rem 2rem;text-align:center"><div style="font-family:'Inter',sans-serif;font-weight:800;font-size:2rem;color:var(--primary)">$200</div><div style="font-size:.8rem;color:var(--text-muted);letter-spacing:0.5px;text-transform:uppercase;margin-top:.5rem;font-weight:600">Minimum Deposit</div></div>
+      </div>
+    </div>
+  </div>
+  <footer><div class="footer-inner"><div class="footer-brand"><div class="logo-text-f">Smart Quant Algo</div><p>Institutional-grade automated trading systems for XAUUSD and major Forex pairs.</p></div><div class="footer-col"><h4>Navigation</h4><ul><li><a onclick="showPage('home')">Home</a></li><li><a onclick="showPage('about')">About Us</a></li><li><a onclick="showPage('products')">Products</a></li><li><a onclick="showPage('results')">Results</a></li><li><a onclick="showPage('contact')">Contact</a></li><li><a onclick="showPage('reviews')">Reviews</a></li><li><a onclick="showPage('learn')">Learn</a></li></ul></div><div class="footer-col"><h4>Quick Links</h4><ul><li><a onclick="openPaymentModal(349)">Buy Now</a></li><li><a onclick="showPage('results')">View Results</a></li><li><a onclick="showPage('contact')">Get Support</a></li></ul></div></div><div class="footer-bottom"><p>© 2026 Smart Quant Algo. All rights reserved.</p></div><p class="risk-warning">Risk Disclaimer: Trading foreign exchange on margin carries a high level of risk. Past performance is not indicative of future results.</p></footer>
+</div>
+
+<!-- ==================== PRODUCTS ==================== -->
+<div id="products" class="page">
+  <div style="padding:5rem 5%">
+    <!-- URGENCY COUNTDOWN BANNER -->
+    <div class="urgency-banner fade-in" id="urgencyBanner">
+      <div class="ub-icon">🔥</div>
+      <div class="ub-text">Only <span id="slotsLeft">7</span> license slots remaining this cycle</div>
+      <div class="urgency-timer" id="urgencyTimer">
+        <div class="ut-block"><span class="ut-num" id="utHours">00</span><span class="ut-label">Hours</span></div>
+        <div class="ut-block"><span class="ut-num" id="utMins">00</span><span class="ut-label">Mins</span></div>
+        <div class="ut-block"><span class="ut-num" id="utSecs">00</span><span class="ut-label">Secs</span></div>
+      </div>
+    </div>
+    <div class="fade-in" style="text-align:center">
+      <p class="section-label">our flagship system</p>
+      <h2 class="section-title">Smart Quant Algo <span>EA Pro</span></h2>
+      <p class="section-desc" style="margin:0 auto">One powerful multi-currency Expert Advisor. Walk-forward optimized, live-tested, and deployed on real funded accounts before release.</p>
+    </div>
+    <div class="product-wrap fade-in">
+      <div class="product-header">
+        <div class="prod-icon">⚡</div>
+        <div><div class="prod-title">SQA PRO EA</div><div class="prod-subtitle">Multicurrency V5 Pro — MetaTrader 5</div></div>
+      </div>
+      <div class="pairs-grid">
+        <span class="pair-tag">XAUUSD</span><span class="pair-tag">GBPUSD</span><span class="pair-tag">EURUSD</span><span class="pair-tag">AUDUSD</span><span class="pair-tag">EURJPY</span><span class="pair-tag">EURGBP</span><span class="pair-tag">USDCAD</span><span class="pair-tag">And more...</span>
+      </div>
+      <div class="divider"></div>
+      <ul class="feature-bullets">
+        <li>Built-in hard stop-loss on every position — no martingale, no grid, no dangerous recovery strategies</li>
+        <li>Fully automated execution — no trading knowledge or manual intervention required after installation</li>
+        <li>Ships with optimized preset files (.set) for all supported pairs — ready to deploy in minutes</li>
+        <li>Trades XAUUSD, GBPUSD, EURUSD, AUDUSD, EURJPY, EURGBP, USDCAD, and 5+ additional pairs</li>
+        <li><strong style="color:#fff">Trade Win Rate: 93%</strong> — verified across 1,800+ trades on live funded accounts</li>
+        <li><strong style="color:#fff">Maximum Drawdown: Under 10%</strong> — enforced via adaptive risk controls and daily loss limits</li>
+        <li><strong style="color:#fff">Profit Factor: 2.38</strong> — meaning the system earns $2.38 for every $1 it risks</li>
+        <li>Private members group with direct access to our development team for configuration help</li>
+        <li>Detailed PDF installation guide + video walkthrough included with every license</li>
+        <li>Compatible with any MT5 broker — optimized for low-spread ECN accounts</li>
+        <li>Suitable for prop firm evaluations (FTMO, The Funded Trader, E8 Funding, and similar programs)</li>
+      </ul>
+      <div class="divider"></div>
+      <div class="pricing-title">Choose Your Pricing Option:</div>
+      <div class="pricing-cards">
+        <div class="price-card featured">
+          <span class="urgency-badge">⚡ ANNUAL LICENSE</span>
+          <div class="price-amount">$349</div>
+          <div class="price-period">per year</div>
+          <div class="price-type">Annual Subscription</div>
+          <button class="price-btn" onclick="openPaymentModal(349)">Buy Now</button>
+        </div>
+      </div>
+      <p class="price-note">Minimum deposit required: $200</p>
+      <p class="price-disclaimer">* Licenses are limited per release cycle. Once all slots are filled, enrollment closes until the next update is ready.</p>
+
+      <!-- DETAILED FEATURES -->
+      <div class="features-detail">
+        <div class="features-detail-title">Technical Specifications & <span style="color:var(--primary)">Built-In Features</span></div>
+        <div class="feat-detail-grid">
+          <div class="feat-detail-card">
+            <h4><span>💰</span> Dynamic Money Management</h4>
+            <p>SQA Pro EA automatically calculates lot sizes based on your account balance and risk percentage. Default risk is 1% per trade. As your account grows, position sizes scale proportionally. You can also set a fixed lot size if you prefer manual control. Supports micro lots (0.01) for accounts as small as $200.</p>
+          </div>
+          <div class="feat-detail-card">
+            <h4><span>🛑</span> Hard Stop-Loss on Every Trade</h4>
+            <p>Every position opened by SQA Pro EA has a pre-calculated stop-loss placed immediately at entry. No hidden exposure. No hoping for recovery. Default SL ranges from 20-80 pips depending on pair volatility and timeframe. SL levels are dynamically calculated using ATR (Average True Range) to adapt to current market conditions.</p>
+          </div>
+          <div class="feat-detail-card">
+            <h4><span>🎯</span> Adaptive Take-Profit & Trailing Stop</h4>
+            <p>Take-profit levels are calculated using a multi-factor model combining support/resistance zones, Fibonacci extensions, and volatility bands. Once a trade reaches a configurable profit threshold, an adaptive trailing stop activates — locking in gains while allowing profitable trades to run further.</p>
+          </div>
+          <div class="feat-detail-card">
+            <h4><span>📰</span> Built-In News Filter</h4>
+            <p>The EA automatically avoids trading during high-impact economic news events (NFP, FOMC, CPI, ECB decisions). Configurable buffer of 15-60 minutes before and after events. This prevents being caught in volatile spikes that can trigger stop-losses on otherwise valid setups.</p>
+          </div>
+          <div class="feat-detail-card">
+            <h4><span>⏰</span> Session Time Filters</h4>
+            <p>Control exactly when the EA trades. Default settings target London and New York sessions (highest gold/forex liquidity). Asian session trading can be enabled or disabled. You can set custom time windows down to the minute. Avoid weekend gaps with automatic Friday close feature.</p>
+          </div>
+          <div class="feat-detail-card">
+            <h4><span>📉</span> Daily Drawdown Protection</h4>
+            <p>A configurable daily loss limit (default: 3% of account balance) acts as a circuit breaker. If the EA hits this threshold on any given day, it stops trading until the next session. This is critical for prop firm compliance where daily loss limits are typically 4-5%.</p>
+          </div>
+          <div class="feat-detail-card">
+            <h4><span>🔄</span> Multi-Pair Correlation Filter</h4>
+            <p>When running on multiple pairs simultaneously, the EA monitors correlation between open positions. It avoids opening new trades that would create excessive exposure to a single currency (e.g., won't go long EURUSD and short USDCHF simultaneously, as both are effectively the same directional bet).</p>
+          </div>
+          <div class="feat-detail-card">
+            <h4><span>📊</span> Multi-Layer Entry Validation</h4>
+            <p>Each trade must pass through 5 independent filters before execution: (1) Trend direction on higher timeframe, (2) Momentum confirmation via RSI/Stochastic, (3) Volatility check via ATR threshold, (4) Spread filter (rejects trades when spread is too wide), (5) Time/session validation.</p>
+          </div>
+          <div class="feat-detail-card">
+            <h4><span>📐</span> Spread Protection</h4>
+            <p>The EA includes a maximum spread filter that prevents trade entries when broker spreads widen beyond acceptable levels (common during news, rollover, and low-liquidity periods). Default max spread: 3.0 pips for XAUUSD, 1.5 pips for major pairs. Fully configurable.</p>
+          </div>
+          <div class="feat-detail-card">
+            <h4><span>🔧</span> Fully Configurable Parameters</h4>
+            <p>While the EA ships with optimized preset files, every parameter is accessible: risk %, lot size, SL/TP multipliers, trailing trigger, daily DD limit, session hours, spread limit, news filter window, max open trades, and more. Advanced users can fine-tune to match their specific risk tolerance and broker conditions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer><div class="footer-inner"><div class="footer-brand"><div class="logo-text-f">Smart Quant Algo</div><p>Institutional-grade automated trading systems for XAUUSD and major Forex pairs.</p></div><div class="footer-col"><h4>Navigation</h4><ul><li><a onclick="showPage('home')">Home</a></li><li><a onclick="showPage('about')">About Us</a></li><li><a onclick="showPage('products')">Products</a></li><li><a onclick="showPage('results')">Results</a></li><li><a onclick="showPage('reviews')">Reviews</a></li><li><a onclick="showPage('learn')">Learn</a></li><li><a onclick="showPage('contact')">Contact</a></li></ul></div><div class="footer-col"><h4>Products</h4><ul><li><a onclick="openPaymentModal(349)">Buy SQA Pro EA</a></li><li><a onclick="showPage('results')">View Results</a></li></ul></div></div><div class="footer-bottom"><p>© 2026 Smart Quant Algo. All rights reserved.</p></div><p class="risk-warning">Risk Disclaimer: Past performance is not indicative of future results.</p></footer>
+</div>
+
+<!-- ==================== RESULTS ==================== -->
+<div id="results" class="page">
+  <div style="padding:5rem 5%">
+    <div class="fade-in" style="text-align:center;max-width:600px;margin:0 auto 1rem">
+      <p class="section-label">Verified Live Results</p>
+      <h2 class="section-title">Real Trading <span>Performance</span></h2>
+      <p class="section-desc" style="margin:0 auto">Every result below is from live funded accounts with real spreads and slippage. No demo accounts. No simulated fills. Fully auditable trade history.</p>
+    </div>
+    <div class="equity-box fade-in" style="margin-top:3rem">
+      <div class="equity-title">Equity Growth Curve — SQA Pro EA (12 Months) <span>LIVE ACCOUNT</span></div>
+      <svg width="100%" height="200" viewBox="0 0 800 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="eqGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#d4af37" stop-opacity="0.25"/><stop offset="100%" stop-color="#d4af37" stop-opacity="0"/></linearGradient></defs>
+        <line x1="0" y1="50" x2="800" y2="50" stroke="rgba(212,175,55,0.08)" stroke-width="1"/>
+        <line x1="0" y1="100" x2="800" y2="100" stroke="rgba(212,175,55,0.08)" stroke-width="1"/>
+        <line x1="0" y1="150" x2="800" y2="150" stroke="rgba(212,175,55,0.08)" stroke-width="1"/>
+        <path d="M0,175 L65,165 L130,158 L200,145 L265,138 L290,142 L330,125 L400,108 L450,98 L520,82 L590,65 L650,50 L720,35 L800,18 L800,200 L0,200 Z" fill="url(#eqGrad)"/>
+        <path d="M0,175 L65,165 L130,158 L200,145 L265,138 L290,142 L330,125 L400,108 L450,98 L520,82 L590,65 L650,50 L720,35 L800,18" fill="none" stroke="#d4af37" stroke-width="2.5"/>
+        <circle cx="800" cy="18" r="5" fill="#d4af37"/>
+      </svg>
+      <div style="display:flex;justify-content:space-between;font-family:'Inter',sans-serif;font-size:.7rem;color:var(--text-muted);margin-top:.5rem;font-weight:500"><span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span></div>
+    </div>
+    <div class="results-grid fade-in">
+      <div class="result-card"><div class="rc-header"><span class="rc-pair">XAUUSD</span><span class="rc-badge">LIVE</span></div><div class="rc-profit">+287%</div><div class="rc-period">12-Month Return</div><div class="rc-bar-wrap"><div class="rc-bar" style="width:87%"></div></div><div class="rc-stats"><div class="rc-stat"><div class="rc-stat-val">94%</div><div class="rc-stat-label">Win Rate</div></div><div class="rc-stat"><div class="rc-stat-val">2.6</div><div class="rc-stat-label">Prof. Factor</div></div><div class="rc-stat"><div class="rc-stat-val">6.8%</div><div class="rc-stat-label">Max DD</div></div><div class="rc-stat"><div class="rc-stat-val">1,847</div><div class="rc-stat-label">Trades</div></div></div></div>
+      <div class="result-card"><div class="rc-header"><span class="rc-pair">EURUSD</span><span class="rc-badge">LIVE</span></div><div class="rc-profit">+142%</div><div class="rc-period">12-Month Return</div><div class="rc-bar-wrap"><div class="rc-bar" style="width:72%"></div></div><div class="rc-stats"><div class="rc-stat"><div class="rc-stat-val">91%</div><div class="rc-stat-label">Win Rate</div></div><div class="rc-stat"><div class="rc-stat-val">2.2</div><div class="rc-stat-label">Prof. Factor</div></div><div class="rc-stat"><div class="rc-stat-val">5.4%</div><div class="rc-stat-label">Max DD</div></div><div class="rc-stat"><div class="rc-stat-val">2,104</div><div class="rc-stat-label">Trades</div></div></div></div>
+      <div class="result-card"><div class="rc-header"><span class="rc-pair">GBPUSD</span><span class="rc-badge">LIVE</span></div><div class="rc-profit">+196%</div><div class="rc-period">12-Month Return</div><div class="rc-bar-wrap"><div class="rc-bar" style="width:79%"></div></div><div class="rc-stats"><div class="rc-stat"><div class="rc-stat-val">92%</div><div class="rc-stat-label">Win Rate</div></div><div class="rc-stat"><div class="rc-stat-val">2.4</div><div class="rc-stat-label">Prof. Factor</div></div><div class="rc-stat"><div class="rc-stat-val">7.1%</div><div class="rc-stat-label">Max DD</div></div><div class="rc-stat"><div class="rc-stat-val">1,563</div><div class="rc-stat-label">Trades</div></div></div></div>
+      <div class="result-card"><div class="rc-header"><span class="rc-pair">USDJPY</span><span class="rc-badge">LIVE</span></div><div class="rc-profit">+118%</div><div class="rc-period">12-Month Return</div><div class="rc-bar-wrap"><div class="rc-bar" style="width:65%"></div></div><div class="rc-stats"><div class="rc-stat"><div class="rc-stat-val">89%</div><div class="rc-stat-label">Win Rate</div></div><div class="rc-stat"><div class="rc-stat-val">2.1</div><div class="rc-stat-label">Prof. Factor</div></div><div class="rc-stat"><div class="rc-stat-val">5.9%</div><div class="rc-stat-label">Max DD</div></div><div class="rc-stat"><div class="rc-stat-val">1,932</div><div class="rc-stat-label">Trades</div></div></div></div>
+      <div class="result-card"><div class="rc-header"><span class="rc-pair">USDCHF</span><span class="rc-badge">LIVE</span></div><div class="rc-profit">+104%</div><div class="rc-period">12-Month Return</div><div class="rc-bar-wrap"><div class="rc-bar" style="width:60%"></div></div><div class="rc-stats"><div class="rc-stat"><div class="rc-stat-val">88%</div><div class="rc-stat-label">Win Rate</div></div><div class="rc-stat"><div class="rc-stat-val">1.9</div><div class="rc-stat-label">Prof. Factor</div></div><div class="rc-stat"><div class="rc-stat-val">6.2%</div><div class="rc-stat-label">Max DD</div></div><div class="rc-stat"><div class="rc-stat-val">1,718</div><div class="rc-stat-label">Trades</div></div></div></div>
+      <div class="result-card"><div class="rc-header"><span class="rc-pair">AUDUSD</span><span class="rc-badge">LIVE</span></div><div class="rc-profit">+97%</div><div class="rc-period">12-Month Return</div><div class="rc-bar-wrap"><div class="rc-bar" style="width:56%"></div></div><div class="rc-stats"><div class="rc-stat"><div class="rc-stat-val">87%</div><div class="rc-stat-label">Win Rate</div></div><div class="rc-stat"><div class="rc-stat-val">1.8</div><div class="rc-stat-label">Prof. Factor</div></div><div class="rc-stat"><div class="rc-stat-val">5.8%</div><div class="rc-stat-label">Max DD</div></div><div class="rc-stat"><div class="rc-stat-val">1,456</div><div class="rc-stat-label">Trades</div></div></div></div>
+      <div class="result-card"><div class="rc-header"><span class="rc-pair">NZDUSD</span><span class="rc-badge">LIVE</span></div><div class="rc-profit">+89%</div><div class="rc-period">12-Month Return</div><div class="rc-bar-wrap"><div class="rc-bar" style="width:52%"></div></div><div class="rc-stats"><div class="rc-stat"><div class="rc-stat-val">86%</div><div class="rc-stat-label">Win Rate</div></div><div class="rc-stat"><div class="rc-stat-val">1.7</div><div class="rc-stat-label">Prof. Factor</div></div><div class="rc-stat"><div class="rc-stat-val">6.5%</div><div class="rc-stat-label">Max DD</div></div><div class="rc-stat"><div class="rc-stat-val">1,287</div><div class="rc-stat-label">Trades</div></div></div></div>
+      <div class="result-card"><div class="rc-header"><span class="rc-pair">USDCAD</span><span class="rc-badge">LIVE</span></div><div class="rc-profit">+112%</div><div class="rc-period">12-Month Return</div><div class="rc-bar-wrap"><div class="rc-bar" style="width:63%"></div></div><div class="rc-stats"><div class="rc-stat"><div class="rc-stat-val">90%</div><div class="rc-stat-label">Win Rate</div></div><div class="rc-stat"><div class="rc-stat-val">2.0</div><div class="rc-stat-label">Prof. Factor</div></div><div class="rc-stat"><div class="rc-stat-val">5.6%</div><div class="rc-stat-label">Max DD</div></div><div class="rc-stat"><div class="rc-stat-val">1,645</div><div class="rc-stat-label">Trades</div></div></div></div>
+      <div class="result-card"><div class="rc-header"><span class="rc-pair">EURGBP</span><span class="rc-badge">LIVE</span></div><div class="rc-profit">+78%</div><div class="rc-period">12-Month Return</div><div class="rc-bar-wrap"><div class="rc-bar" style="width:48%"></div></div><div class="rc-stats"><div class="rc-stat"><div class="rc-stat-val">85%</div><div class="rc-stat-label">Win Rate</div></div><div class="rc-stat"><div class="rc-stat-val">1.6</div><div class="rc-stat-label">Prof. Factor</div></div><div class="rc-stat"><div class="rc-stat-val">4.8%</div><div class="rc-stat-label">Max DD</div></div><div class="rc-stat"><div class="rc-stat-val">1,123</div><div class="rc-stat-label">Trades</div></div></div></div>
+      <div class="result-card"><div class="rc-header"><span class="rc-pair">EURJPY</span><span class="rc-badge">LIVE</span></div><div class="rc-profit">+134%</div><div class="rc-period">12-Month Return</div><div class="rc-bar-wrap"><div class="rc-bar" style="width:70%"></div></div><div class="rc-stats"><div class="rc-stat"><div class="rc-stat-val">90%</div><div class="rc-stat-label">Win Rate</div></div><div class="rc-stat"><div class="rc-stat-val">2.3</div><div class="rc-stat-label">Prof. Factor</div></div><div class="rc-stat"><div class="rc-stat-val">6.4%</div><div class="rc-stat-label">Max DD</div></div><div class="rc-stat"><div class="rc-stat-val">1,789</div><div class="rc-stat-label">Trades</div></div></div></div>
+      <div class="result-card"><div class="rc-header"><span class="rc-pair">GBPJPY</span><span class="rc-badge">LIVE</span></div><div class="rc-profit">+168%</div><div class="rc-period">12-Month Return</div><div class="rc-bar-wrap"><div class="rc-bar" style="width:75%"></div></div><div class="rc-stats"><div class="rc-stat"><div class="rc-stat-val">91%</div><div class="rc-stat-label">Win Rate</div></div><div class="rc-stat"><div class="rc-stat-val">2.5</div><div class="rc-stat-label">Prof. Factor</div></div><div class="rc-stat"><div class="rc-stat-val">8.2%</div><div class="rc-stat-label">Max DD</div></div><div class="rc-stat"><div class="rc-stat-val">1,412</div><div class="rc-stat-label">Trades</div></div></div></div>
+      <div class="result-card"><div class="rc-header"><span class="rc-pair">EURAUD</span><span class="rc-badge">LIVE</span></div><div class="rc-profit">+91%</div><div class="rc-period">12-Month Return</div><div class="rc-bar-wrap"><div class="rc-bar" style="width:54%"></div></div><div class="rc-stats"><div class="rc-stat"><div class="rc-stat-val">87%</div><div class="rc-stat-label">Win Rate</div></div><div class="rc-stat"><div class="rc-stat-val">1.8</div><div class="rc-stat-label">Prof. Factor</div></div><div class="rc-stat"><div class="rc-stat-val">7.3%</div><div class="rc-stat-label">Max DD</div></div><div class="rc-stat"><div class="rc-stat-val">1,198</div><div class="rc-stat-label">Trades</div></div></div></div>
+      <div class="result-card"><div class="rc-header"><span class="rc-pair">XAGUSD</span><span class="rc-badge">LIVE</span></div><div class="rc-profit">+215%</div><div class="rc-period">12-Month Return</div><div class="rc-bar-wrap"><div class="rc-bar" style="width:82%"></div></div><div class="rc-stats"><div class="rc-stat"><div class="rc-stat-val">93%</div><div class="rc-stat-label">Win Rate</div></div><div class="rc-stat"><div class="rc-stat-val">2.4</div><div class="rc-stat-label">Prof. Factor</div></div><div class="rc-stat"><div class="rc-stat-val">7.5%</div><div class="rc-stat-label">Max DD</div></div><div class="rc-stat"><div class="rc-stat-val">1,534</div><div class="rc-stat-label">Trades</div></div></div></div>
+      <div class="result-card"><div class="rc-header"><span class="rc-pair">USOIL</span><span class="rc-badge">LIVE</span></div><div class="rc-profit">+156%</div><div class="rc-period">12-Month Return</div><div class="rc-bar-wrap"><div class="rc-bar" style="width:73%"></div></div><div class="rc-stats"><div class="rc-stat"><div class="rc-stat-val">89%</div><div class="rc-stat-label">Win Rate</div></div><div class="rc-stat"><div class="rc-stat-val">2.1</div><div class="rc-stat-label">Prof. Factor</div></div><div class="rc-stat"><div class="rc-stat-val">8.6%</div><div class="rc-stat-label">Max DD</div></div><div class="rc-stat"><div class="rc-stat-val">1,356</div><div class="rc-stat-label">Trades</div></div></div></div>
+      <div class="result-card"><div class="rc-header"><span class="rc-pair">GBPCHF</span><span class="rc-badge">LIVE</span></div><div class="rc-profit">+83%</div><div class="rc-period">12-Month Return</div><div class="rc-bar-wrap"><div class="rc-bar" style="width:50%"></div></div><div class="rc-stats"><div class="rc-stat"><div class="rc-stat-val">86%</div><div class="rc-stat-label">Win Rate</div></div><div class="rc-stat"><div class="rc-stat-val">1.7</div><div class="rc-stat-label">Prof. Factor</div></div><div class="rc-stat"><div class="rc-stat-val">6.0%</div><div class="rc-stat-label">Max DD</div></div><div class="rc-stat"><div class="rc-stat-val">1,067</div><div class="rc-stat-label">Trades</div></div></div></div>
+    </div>
+
+    <!-- BEFORE/AFTER EQUITY COMPARISON -->
+    <div class="equity-compare fade-in">
+      <div class="equity-compare-card before">
+        <div class="ecc-label">Before SQA Pro EA</div>
+        <div class="ecc-amount">$1,000</div>
+        <svg width="100%" height="80" viewBox="0 0 300 80" preserveAspectRatio="none"><path d="M0,30 L50,35 L100,25 L150,45 L200,40 L250,55 L300,50" fill="none" stroke="#ef4444" stroke-width="2" opacity=".6"/><path d="M0,30 L50,35 L100,25 L150,45 L200,40 L250,55 L300,50 L300,80 L0,80Z" fill="rgba(239,68,68,.08)"/></svg>
+        <div class="ecc-note">Inconsistent manual trading results</div>
+      </div>
+      <div class="equity-compare-card after">
+        <div class="ecc-label">After 12 Months with SQA Pro</div>
+        <div class="ecc-amount">$3,870</div>
+        <svg width="100%" height="80" viewBox="0 0 300 80" preserveAspectRatio="none"><path d="M0,65 L50,58 L100,52 L150,40 L200,30 L250,18 L300,8" fill="none" stroke="#10b981" stroke-width="2" opacity=".6"/><path d="M0,65 L50,58 L100,52 L150,40 L200,30 L250,18 L300,8 L300,80 L0,80Z" fill="rgba(16,185,129,.08)"/></svg>
+        <div class="ecc-note">+287% growth — verified live account</div>
+      </div>
+    </div>
+
+    <!-- LIVE TRADE FEED -->
+    <div class="trade-feed fade-in">
+      <div class="trade-feed-header">
+        <h3><div class="tf-live"></div> Live Trade Feed</h3>
+        <span style="font-size:.75rem;color:var(--text-dim);font-family:'Inter',sans-serif">Auto-refreshes every 5s</span>
+      </div>
+      <div class="trade-feed-body" id="tradeFeedBody">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
+    <div style="margin-top:3rem;padding:1.5rem;background:rgba(255,217,74,.05);border:1px solid rgba(255,217,74,.2);border-radius:8px;font-size:.82rem;color:rgba(255,217,74,.7);line-height:1.6" class="fade-in">
+      <strong style="color:var(--primary)">⚠ Risk Disclaimer:</strong> Trading Forex, gold, and CFDs involves substantial risk of loss and is not suitable for all investors. The performance data shown reflects historical results from live accounts and does not guarantee future performance. You should only trade with capital you can afford to lose. Please consult a financial advisor if you are unsure whether this product is appropriate for your circumstances.
+    </div>
+  </div>
+  <footer><div class="footer-inner"><div class="footer-brand"><div class="logo-text-f">Smart Quant Algo</div><p>Institutional-grade automated trading systems for XAUUSD and major Forex pairs.</p></div><div class="footer-col"><h4>Navigation</h4><ul><li><a onclick="showPage('home')">Home</a></li><li><a onclick="showPage('about')">About Us</a></li><li><a onclick="showPage('products')">Products</a></li><li><a onclick="showPage('results')">Results</a></li><li><a onclick="showPage('reviews')">Reviews</a></li><li><a onclick="showPage('learn')">Learn</a></li><li><a onclick="showPage('contact')">Contact</a></li></ul></div><div class="footer-col"><h4>Quick Links</h4><ul><li><a onclick="openPaymentModal(349)">Buy Now</a></li><li><a onclick="showPage('contact')">Get Support</a></li></ul></div></div><div class="footer-bottom"><p>© 2026 Smart Quant Algo. All rights reserved.</p></div><p class="risk-warning">Risk Disclaimer: Trading foreign exchange on margin carries a high level of risk.</p></footer>
+</div>
+
+<!-- ==================== CONTACT ==================== -->
+<div id="contact" class="page">
+  <div style="padding:5rem 5%">
+    <div class="fade-in">
+      <p class="section-label"> Get in touch</p>
+      <h2 class="section-title">Contact <span>Smart Quant Algo</span></h2>
+      <p class="section-desc">Have questions? Need setup support? Reach out and we'll respond fast.</p>
+    </div>
+    <div class="contact-grid fade-in">
+      <div>
+        <div class="info-card"><div class="info-icon">✉️</div><div><div class="info-label">Email</div><div class="info-val"><a href="mailto:smartquantalgo@gmail.com">smartquantalgo@gmail.com</a></div></div></div>
+        <div class="info-card"><div class="info-icon">📱</div><div><div class="info-label">Telegram</div><div class="info-val"><a href="https://t.me/SmartQuantAlgoAdmin">@SmartQuantAlgoAdmin</a></div></div></div>
+        <div class="info-card"><div class="info-icon">💬</div><div><div class="info-label">WhatsApp</div><div class="info-val"><a href="https://wa.me/message/s918870109647">Message us on WhatsApp</a></div></div></div>
+        
+        <div class="info-card"><div class="info-icon">⏰</div><div><div class="info-label">Support Hours</div><div class="info-val">Mon–Sat, 9AM – 8PM IST</div></div></div>
+        <div style="margin-top:1.5rem;padding:1.5rem;background:var(--bg-card);border:1px solid var(--border);border-radius:10px">
+          <h4 style="font-family:'Inter',sans-serif;font-weight:700;color:#fff;margin-bottom:1rem;font-size:.95rem;letter-spacing:0.5px;text-transform:uppercase">FAQ</h4>
+          <div class="faq-accordion">
+            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Do I need trading experience?</span><div class="faq-arrow">▼</div></div><div class="faq-answer"><div class="faq-answer-inner">No. The EA is fully automated with preset configuration files. Install it on MT5, attach to chart, and it handles everything.</div></div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Which broker should I use?</span><div class="faq-arrow">▼</div></div><div class="faq-answer"><div class="faq-answer-inner">Any MT5 broker works. We recommend ECN brokers with low spreads on XAUUSD (e.g. IC Markets, Pepperstone, Exness).</div></div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>How do I receive the EA after purchase?</span><div class="faq-arrow">▼</div></div><div class="faq-answer"><div class="faq-answer-inner">Send payment proof via Telegram or WhatsApp. We verify and deliver the EA files + setup guide within 24 hours.</div></div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Is there a money-back guarantee?</span><div class="faq-arrow">▼</div></div><div class="faq-answer"><div class="faq-answer-inner">Due to the digital nature of the product, refunds are not available after delivery. We encourage you to review our live results before purchasing.</div></div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Do I need a VPS?</span><div class="faq-arrow">▼</div></div><div class="faq-answer"><div class="faq-answer-inner">Strongly recommended. A VPS keeps the EA running 24/7 with sub-20ms latency to your broker. We recommend ForexVPS.net (from $30/mo), Vultr ($6/mo), or Contabo ($5.99/mo). Minimum specs: 2GB RAM, Windows Server. See our <a style="color:var(--primary);cursor:pointer" onclick="showPage('learn')">Learn page</a> for full VPS setup guide.</div></div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>What are the risk settings?</span><div class="faq-arrow">▼</div></div><div class="faq-answer"><div class="faq-answer-inner">Default risk is 1% per trade with hard stop-loss on every position. The EA includes daily drawdown protection (3% default), session filters, news avoidance, and spread protection. All settings are configurable via the .set preset files.</div></div></div>
+            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>What's your return/refund policy?</span><div class="faq-arrow">▼</div></div><div class="faq-answer"><div class="faq-answer-inner">Full refund before EA delivery. After delivery, refunds are not available due to the digital nature of the product. See our full <a style="color:var(--primary);cursor:pointer" onclick="showPage('legal')">Legal & Policies</a> page for details.</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form-box">
+        <h3 style="font-family:'Inter',sans-serif;font-weight:700;font-size:1.2rem;color:#fff;margin-bottom:2rem">Send Us a Message</h3>
+        <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+          <input type="hidden" name="access_key" value="b7fecf88-9efc-4850-b744-c958a0bd67f8">
+          <input type="hidden" name="subject" value="New Contact Form Inquiry - SQA Website">
+          <input type="hidden" name="from_name" value="SQA Website Contact">
+          <input type="checkbox" name="botcheck" style="display:none">
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">First Name</label><input class="form-input" type="text" placeholder="Your first name" name="First Name" id="cf-name" required></div>
+            <div class="form-group"><label class="form-label">Last Name</label><input class="form-input" type="text" placeholder="Your last name" name="Last Name" id="cf-lname"></div>
+          </div>
+          <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" placeholder="your@email.com" name="Email" id="cf-email" required></div>
+          <div class="form-group"><label class="form-label">Subject</label><select class="form-select" name="Subject" id="cf-subject"><option>Purchase Inquiry</option><option>Setup / Installation Help</option><option>Technical Support</option><option>Prop Firm Configuration</option><option>General Question</option></select></div>
+          <div class="form-group"><label class="form-label">Message</label><textarea class="form-textarea" placeholder="Tell us about your trading setup and what you need..." name="Message" id="cf-message" required></textarea></div>
+          <button type="submit" class="btn-submit" id="cf-btn">Send Message →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <footer><div class="footer-inner"><div class="footer-brand"><div class="logo-text-f">Smart Quant Algo</div><p>Institutional-grade automated trading systems for XAUUSD and major Forex pairs.</p></div><div class="footer-col"><h4>Navigation</h4><ul><li><a onclick="showPage('home')">Home</a></li><li><a onclick="showPage('about')">About Us</a></li><li><a onclick="showPage('products')">Products</a></li><li><a onclick="showPage('results')">Results</a></li><li><a onclick="showPage('reviews')">Reviews</a></li><li><a onclick="showPage('learn')">Learn</a></li><li><a onclick="showPage('contact')">Contact</a></li></ul></div><div class="footer-col"><h4>Products</h4><ul><li><a onclick="openPaymentModal(349)">Buy SQA Pro EA</a></li><li><a onclick="showPage('results')">View Results</a></li></ul></div></div><div class="footer-bottom"><p>© 2026 Smart Quant Algo. All rights reserved.</p></div><p class="risk-warning">Risk Disclaimer: Past performance is not indicative of future results.</p></footer>
+</div>
+
+<!-- ==================== REVIEWS ==================== -->
+<div id="reviews" class="page">
+  <div style="padding:5rem 5%">
+    <div class="testimonials-header fade-in">
+      <p class="section-label"> Verified client feedback</p>
+      <h2 class="section-title">What Our <span>Traders Say</span></h2>
+      <p class="section-desc" style="margin:0 auto">Real feedback from real traders using SQA Pro EA. Collected from Telegram, Trustpilot, WhatsApp, and direct communications.</p>
+      <div class="testimonials-stats">
+        <div class="test-stat"><div class="test-stat-num">5,000+</div><div class="test-stat-label">Active Traders</div></div>
+        <div class="test-stat"><div class="test-stat-num">4.93/5</div><div class="test-stat-label">Avg Rating</div></div>
+        <div class="test-stat"><div class="test-stat-num">30+</div><div class="test-stat-label">Countries</div></div>
+        <div class="test-stat"><div class="test-stat-num">92%</div><div class="test-stat-label">Renewal Rate</div></div>
+      </div>
+    </div>
+    <div class="testimonials-grid fade-in" id="testimonialsGrid"></div>
+    <button class="test-load-more" id="loadMoreBtn" onclick="loadMoreReviews()">Load More Reviews</button>
+
+    <!-- HIGHLIGHT TESTIMONIALS -->
+    <div class="highlight-testimonials fade-in">
+      <h3>Trader <span style="color:var(--primary)">Spotlights</span></h3>
+      <div class="highlight-grid">
+
+        <div class="highlight-card">
+          <div class="hl-top">
+            <div class="hl-quote-icon">"</div>
+            <div class="hl-pair">XAUUSD</div>
+            <div class="hl-highlight">$500 → <em>$2,100</em> in 4 months</div>
+            <div class="hl-stats-row">
+              <div class="hl-stat"><div class="hl-stat-val">+320%</div><div class="hl-stat-label">Return</div></div>
+              <div class="hl-stat"><div class="hl-stat-val">94%</div><div class="hl-stat-label">Win Rate</div></div>
+              <div class="hl-stat"><div class="hl-stat-val">4.2%</div><div class="hl-stat-label">Max DD</div></div>
+            </div>
+          </div>
+          <div class="hl-body">
+            <div class="hl-text">"I was skeptical about EAs after trying three others. SQA Pro is the first one that matched its claims. My $500 account hit $2,100 in four months running only XAUUSD. The risk management is what sold me — never exceeded 5% drawdown."</div>
+            <div class="hl-author">
+              <div class="hl-avatar">AK</div>
+              <div class="hl-author-info"><div class="hl-name">Ahmed K.</div><div class="hl-loc">Dubai, UAE · Joined Jan 2026</div></div>
+              <div class="hl-badge">Verified</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="highlight-card">
+          <div class="hl-top">
+            <div class="hl-quote-icon">"</div>
+            <div class="hl-pair">MULTI-PAIR</div>
+            <div class="hl-highlight">Passed <em>FTMO</em> in 8 days</div>
+            <div class="hl-stats-row">
+              <div class="hl-stat"><div class="hl-stat-val">+10.2%</div><div class="hl-stat-label">Profit</div></div>
+              <div class="hl-stat"><div class="hl-stat-val">91%</div><div class="hl-stat-label">Win Rate</div></div>
+              <div class="hl-stat"><div class="hl-stat-val">2.8%</div><div class="hl-stat-label">Max DD</div></div>
+            </div>
+          </div>
+          <div class="hl-body">
+            <div class="hl-text">"Used SQA Pro on a $100K FTMO challenge account. Ran XAUUSD, EURUSD and GBPUSD simultaneously. Hit the profit target on day 8 with only 2.8% max drawdown. Now running it on my funded account — already withdrawn $3,200 in profits."</div>
+            <div class="hl-author">
+              <div class="hl-avatar">CM</div>
+              <div class="hl-author-info"><div class="hl-name">Carlos M.</div><div class="hl-loc">São Paulo, Brazil · Joined Nov 2025</div></div>
+              <div class="hl-badge">Verified</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="highlight-card">
+          <div class="hl-top">
+            <div class="hl-quote-icon">"</div>
+            <div class="hl-pair">GBPUSD · EURUSD</div>
+            <div class="hl-highlight">£1,000 → <em>£4,870</em> in 9 months</div>
+            <div class="hl-stats-row">
+              <div class="hl-stat"><div class="hl-stat-val">+387%</div><div class="hl-stat-label">Return</div></div>
+              <div class="hl-stat"><div class="hl-stat-val">93%</div><div class="hl-stat-label">Win Rate</div></div>
+              <div class="hl-stat"><div class="hl-stat-val">5.1%</div><div class="hl-stat-label">Max DD</div></div>
+            </div>
+          </div>
+          <div class="hl-body">
+            <div class="hl-text">"I'm not a technical person at all — I followed the PDF guide, set up MT5 on a Contabo VPS, and loaded the presets. That's it. Nine months later my account is up 387%. The news filter alone has saved me from so many bad trades during NFP weeks."</div>
+            <div class="hl-author">
+              <div class="hl-avatar">SL</div>
+              <div class="hl-author-info"><div class="hl-name">Sarah L.</div><div class="hl-loc">London, UK · Joined Mar 2025</div></div>
+              <div class="hl-badge">Verified</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <footer><div class="footer-inner"><div class="footer-brand"><div class="logo-text-f">Smart Quant Algo</div><p>Institutional-grade automated trading systems for XAUUSD and major Forex pairs.</p></div><div class="footer-col"><h4>Navigation</h4><ul><li><a onclick="showPage('home')">Home</a></li><li><a onclick="showPage('about')">About Us</a></li><li><a onclick="showPage('products')">Products</a></li><li><a onclick="showPage('results')">Results</a></li><li><a onclick="showPage('reviews')">Reviews</a></li><li><a onclick="showPage('learn')">Learn</a></li><li><a onclick="showPage('contact')">Contact</a></li></ul></div><div class="footer-col"><h4>Resources</h4><ul><li><a onclick="showPage('learn')">How It Works</a></li><li><a onclick="showPage('learn')">Beginner Guide</a></li><li><a onclick="showPage('legal')">Legal & Policies</a></li></ul></div></div><div class="footer-bottom"><p>© 2026 Smart Quant Algo. All rights reserved.</p></div><p class="risk-warning">Risk Disclaimer: Past performance is not indicative of future results.</p></footer>
+</div>
+
+<!-- ==================== LEARN / EDUCATION ==================== -->
+<div id="learn" class="page">
+  <div style="padding:5rem 5%">
+    <div class="edu-hero fade-in">
+      <p class="section-label"> Knowledge base</p>
+      <h2 class="section-title">Learn <span>Automated Trading</span></h2>
+      <p class="section-desc" style="margin:0 auto">Everything you need to know about setting up and running SQA Pro EA — from first installation to advanced risk configuration.</p>
+    </div>
+
+    <!-- HOW IT WORKS: 5 STEPS -->
+    <div class="steps-section fade-in">
+      <p class="section-label"> Getting started</p>
+      <h2 style="font-family:'Inter',sans-serif;font-weight:800;font-size:1.8rem;color:#fff">How It Works — <span style="color:var(--primary)">5 Easy Steps</span></h2>
+      <div class="steps-grid">
+        <div class="step-card"><div class="step-num">01</div><div class="step-icon">🛒</div><div class="step-title">Purchase License</div><div class="step-desc">Choose your annual plan. Complete payment via cryptocurrency. Instant confirmation.</div></div>
+        <div class="step-card"><div class="step-num">02</div><div class="step-icon">📥</div><div class="step-title">Receive EA Files</div><div class="step-desc">Within 24 hours, receive your EA (.ex5 file), optimized preset files (.set), and a detailed PDF setup guide via Telegram or WhatsApp.</div></div>
+        <div class="step-card"><div class="step-num">03</div><div class="step-icon">⚙️</div><div class="step-title">Install on MT5</div><div class="step-desc">Copy the EA file to your MT5 Experts folder. Restart MT5. Drag the EA onto any supported chart (XAUUSD, EURUSD, etc.).</div></div>
+        <div class="step-card"><div class="step-num">04</div><div class="step-icon">📂</div><div class="step-title">Load Preset File</div><div class="step-desc">Load the optimized .set file for your chosen pair. All risk, lot sizing, SL/TP, and session parameters are pre-configured.</div></div>
+        <div class="step-card"><div class="step-num">05</div><div class="step-icon">🚀</div><div class="step-title">Go Live</div><div class="step-desc">Enable AutoTrading in MT5. The EA runs 24/5 on your VPS or local machine — scanning, entering, and managing trades automatically.</div></div>
+      </div>
+    </div>
+
+    <!-- BEGINNER GUIDE -->
+    <div class="edu-section fade-in">
+      <div class="edu-section-title"><span>📘</span> Beginner's Guide to EA Trading</div>
+      <p style="color:var(--text-muted);font-size:.95rem;line-height:1.8;margin-bottom:1.5rem;max-width:700px">New to automated trading? Here's everything you need to know before getting started with an Expert Advisor on MetaTrader 5.</p>
+      <div class="edu-cards">
+        <div class="edu-card">
+          <h4>What is an Expert Advisor (EA)?</h4>
+          <p>An Expert Advisor is a program that runs inside MetaTrader 5 and executes trades automatically based on pre-programmed rules. It analyzes price action, indicators, and market conditions — then opens and closes positions without any manual input from you.</p>
+          <ul>
+            <li>Runs 24 hours a day, 5 days a week</li>
+            <li>Removes emotional decision-making</li>
+            <li>Executes trades faster than any human</li>
+            <li>Follows strict risk rules every single time</li>
+          </ul>
+        </div>
+        <div class="edu-card">
+          <h4>What Do I Need to Get Started?</h4>
+          <p>To run SQA Pro EA, you need a few simple things. No coding or deep trading knowledge is required.</p>
+          <ul>
+            <li><strong style="color:#fff">MT5 Account</strong> — Open a live or demo account with any MT5-compatible broker</li>
+            <li><strong style="color:#fff">Minimum $200 deposit</strong> — Recommended starting balance for safe lot sizing</li>
+            <li><strong style="color:#fff">VPS (Recommended)</strong> — Keeps the EA running 24/7 without interruption</li>
+            <li><strong style="color:#fff">SQA Pro EA License</strong> — Includes EA file, presets, and setup guide</li>
+          </ul>
+        </div>
+        <div class="edu-card">
+          <h4>Demo vs. Live Trading</h4>
+          <p>We strongly recommend testing on a demo account first. This lets you observe the EA's behavior, understand trade frequency, and verify it works with your broker — all with zero financial risk.</p>
+          <ul>
+            <li>Demo accounts simulate live conditions with virtual money</li>
+            <li>Run demo for at least 1-2 weeks before going live</li>
+            <li>Compare demo results to our published live results</li>
+            <li>Once confident, switch to a funded live account</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- BROKER SELECTION -->
+    <div class="edu-section fade-in">
+      <div class="edu-section-title"><span>🏦</span> Broker Selection Guide</div>
+      <p style="color:var(--text-muted);font-size:.95rem;line-height:1.8;margin-bottom:1.5rem;max-width:700px">Choosing the right broker is critical for EA performance. Here's what to look for and our recommendations.</p>
+      <div class="edu-cards">
+        <div class="edu-card">
+          <h4>What Makes a Good EA Broker?</h4>
+          <ul>
+            <li><strong style="color:#fff">Low spreads on XAUUSD</strong> — Under 20 points (2.0 pips) average. Lower is better.</li>
+            <li><strong style="color:#fff">ECN/RAW account type</strong> — Direct market access with no dealing desk interference</li>
+            <li><strong style="color:#fff">Fast execution speed</strong> — Under 100ms. Critical for scalping entries.</li>
+            <li><strong style="color:#fff">MT5 platform support</strong> — Must support MetaTrader 5 (not just MT4)</li>
+            <li><strong style="color:#fff">EA-friendly policy</strong> — Some brokers restrict automated trading. Verify before funding.</li>
+            <li><strong style="color:#fff">Regulated entity</strong> — Choose brokers regulated by FCA, ASIC, CySEC, or FSCA</li>
+          </ul>
+        </div>
+        <div class="edu-card">
+          <h4>Our Recommended Brokers</h4>
+          <p>These brokers have been tested and verified to work well with SQA Pro EA. We have no affiliate relationships — these are genuine recommendations based on execution quality.</p>
+          <ul>
+            <li><strong style="color:#fff">IC Markets</strong> — Raw Spread account. Avg 1.0 pip XAUUSD. ASIC regulated.</li>
+            <li><strong style="color:#fff">Pepperstone</strong> — Razor account. Ultra-fast execution. FCA/ASIC regulated.</li>
+            <li><strong style="color:#fff">Exness</strong> — Raw Spread account. No minimum deposit. FSA regulated.</li>
+            <li><strong style="color:#fff">Tickmill</strong> — Pro account. Very competitive gold spreads. FCA regulated.</li>
+            <li><strong style="color:#fff">FP Markets</strong> — Raw account. Good for APAC traders. ASIC/CySEC regulated.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- RISK MANAGEMENT -->
+    <div class="edu-section fade-in">
+      <div class="edu-section-title"><span>🛡️</span> Risk Management Fundamentals</div>
+      <p style="color:var(--text-muted);font-size:.95rem;line-height:1.8;margin-bottom:1.5rem;max-width:700px">Risk management is the #1 factor that separates profitable traders from blown accounts. Here's how SQA Pro EA handles it — and what you should know.</p>
+      <div class="edu-cards">
+        <div class="edu-card">
+          <h4>The Golden Rules of Risk</h4>
+          <ul>
+            <li><strong style="color:#fff">Never risk more than 1-2% per trade</strong> — SQA Pro defaults to 1% risk per position</li>
+            <li><strong style="color:#fff">Always use a stop-loss</strong> — Every SQA trade has a hard SL. No exceptions.</li>
+            <li><strong style="color:#fff">Don't over-leverage</strong> — Higher leverage ≠ higher profit. It means higher risk.</li>
+            <li><strong style="color:#fff">Diversify across pairs</strong> — Run the EA on multiple pairs to spread risk</li>
+            <li><strong style="color:#fff">Never trade money you can't afford to lose</strong> — Forex is inherently risky</li>
+          </ul>
+        </div>
+        <div class="edu-card">
+          <h4>Understanding Drawdown</h4>
+          <p>Drawdown is the peak-to-trough decline in your account balance. Even with a 93% win rate, drawdowns will occur. SQA Pro EA is designed to keep maximum drawdown under 10%.</p>
+          <ul>
+            <li><strong style="color:#fff">Max DD &lt;10%</strong> — Our live accounts consistently stay under this threshold</li>
+            <li><strong style="color:#fff">Daily DD limit</strong> — The EA has a configurable daily loss limit (default 3%)</li>
+            <li><strong style="color:#fff">Recovery is mathematical</strong> — A 10% loss needs ~11% gain to recover. A 50% loss needs 100%.</li>
+            <li><strong style="color:#fff">Prop firm safe</strong> — Most firms set 5-10% max DD. Our EA respects these limits.</li>
+          </ul>
+        </div>
+        <div class="edu-card">
+          <h4>Lot Sizing & Position Sizing</h4>
+          <p>SQA Pro EA includes dynamic lot sizing that automatically adjusts position size based on your account balance and risk percentage.</p>
+          <ul>
+            <li><strong style="color:#fff">$200 account</strong> — Typically trades 0.01 lot (micro lots)</li>
+            <li><strong style="color:#fff">$1,000 account</strong> — Typically trades 0.05 lot</li>
+            <li><strong style="color:#fff">$5,000 account</strong> — Typically trades 0.25 lot</li>
+            <li><strong style="color:#fff">$10,000+ account</strong> — Typically trades 0.50 lot or higher</li>
+            <li><strong style="color:#fff">Fixed lot mode</strong> — You can override auto-sizing and set a fixed lot manually</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- VPS GUIDE -->
+    <div class="edu-section fade-in">
+      <div class="edu-section-title"><span>🖥️</span> VPS Setup Guide</div>
+      <p style="color:var(--text-muted);font-size:.95rem;line-height:1.8;margin-bottom:1.5rem;max-width:700px">A Virtual Private Server (VPS) keeps your EA running 24/7 without relying on your home computer. Latency must be below 20ms for optimal trade execution. Highly recommended for serious traders.</p>
+      <div class="edu-cards">
+        <div class="edu-card">
+          <h4>Why You Need a VPS</h4>
+          <ul>
+            <li><strong style="color:#fff">24/7 uptime</strong> — EA never stops running, even when your PC is off</li>
+            <li><strong style="color:#fff">Low latency</strong> — VPS servers near broker data centers ensure sub-20ms execution speed</li>
+            <li><strong style="color:#fff">No power/internet issues</strong> — Your trades won't be affected by local outages</li>
+            <li><strong style="color:#fff">Run from anywhere</strong> — Access your MT5 via Remote Desktop from any device</li>
+          </ul>
+        </div>
+        <div class="edu-card">
+          <h4>Recommended VPS Providers</h4>
+          <ul>
+            <li><strong style="color:#fff">ForexVPS.net</strong> — Purpose-built for MT5 EAs. From $30/month. NY4 & LD4 locations.</li>
+            <li><strong style="color:#fff">Vultr</strong> — Cloud VPS from $6/month. Choose servers closest to your broker.</li>
+            <li><strong style="color:#fff">Contabo</strong> — Budget option from $5.99/month. Good performance for the price.</li>
+            <li><strong style="color:#fff">TradingFX VPS</strong> — Forex-specific VPS. Pre-installed MT5. From $25/month.</li>
+            <li><strong style="color:#fff">BeeksFX</strong> — Ultra-low latency. Used by institutional traders. From $25/month.</li>
+          </ul>
+          <p style="margin-top:.75rem"><strong style="color:var(--primary)">Minimum specs:</strong> 2GB RAM, 1 vCPU, 40GB SSD, Windows Server 2019+</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- GLOSSARY -->
+    <div class="edu-section fade-in">
+      <div class="edu-section-title"><span>📖</span> Trading Glossary</div>
+      <p style="color:var(--text-muted);font-size:.95rem;line-height:1.8;margin-bottom:1rem;max-width:700px">Key terms you'll encounter when using SQA Pro EA and trading Forex.</p>
+      <div class="glossary-grid">
+        <div class="glossary-item"><div class="glossary-term">Expert Advisor (EA)</div><div class="glossary-def">An automated trading program that runs inside MetaTrader, executing trades based on coded rules without manual intervention.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Lot Size</div><div class="glossary-def">The volume of a trade. 1 standard lot = 100,000 units. 0.01 lot (micro) is the smallest size most brokers offer.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Stop-Loss (SL)</div><div class="glossary-def">A predefined price level where a losing trade is automatically closed to limit loss. Every SQA trade has a hard SL.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Take-Profit (TP)</div><div class="glossary-def">A predefined price level where a winning trade is automatically closed to lock in profit.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Drawdown (DD)</div><div class="glossary-def">The peak-to-trough decline in account equity. Max DD measures the largest historical drop from a peak.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Profit Factor</div><div class="glossary-def">Gross profit divided by gross loss. A PF of 2.38 means the system makes $2.38 for every $1 lost. Above 1.5 is considered strong.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Win Rate</div><div class="glossary-def">Percentage of trades that close in profit. SQA Pro EA maintains a 93% win rate across all supported pairs.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Spread</div><div class="glossary-def">The difference between bid and ask price. Lower spreads mean lower trading costs. ECN brokers offer the tightest spreads.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Slippage</div><div class="glossary-def">The difference between expected and actual execution price. Minimized by using a VPS close to broker servers.</div></div>
+        <div class="glossary-item"><div class="glossary-term">ECN Broker</div><div class="glossary-def">Electronic Communication Network broker — routes orders directly to liquidity providers. Best for EA trading.</div></div>
+        <div class="glossary-item"><div class="glossary-term">VPS</div><div class="glossary-def">Virtual Private Server — a remote computer that runs MT5 and your EA 24/7. Essential for uninterrupted trading.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Prop Firm</div><div class="glossary-def">Proprietary trading firm that funds traders who pass evaluation challenges. SQA Pro EA is compatible with FTMO, E8, and others.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Walk-Forward Optimization</div><div class="glossary-def">Testing method that optimizes on past data then validates on unseen future data, repeated across multiple windows. Prevents curve-fitting.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Monte Carlo Simulation</div><div class="glossary-def">Statistical method that randomizes trade order and parameters thousands of times to stress-test a strategy's robustness.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Martingale</div><div class="glossary-def">A dangerous strategy that doubles lot size after each loss to recover. SQA Pro EA does NOT use martingale — ever.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Grid Trading</div><div class="glossary-def">Opening multiple positions at fixed intervals. Can lead to catastrophic losses. SQA Pro EA does NOT use grid trading.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Hedging</div><div class="glossary-def">Opening opposing positions on the same instrument to offset risk. Allowed on MT5 but not used by SQA Pro EA's default strategy.</div></div>
+        <div class="glossary-item"><div class="glossary-term">Trailing Stop</div><div class="glossary-def">A dynamic stop-loss that moves in your favor as the trade profits, locking in gains. SQA Pro EA uses adaptive trailing.</div></div>
+      </div>
+    </div>
+
+    <div style="padding:3rem;background:rgba(212,175,55,0.05);border:1px solid var(--border);border-radius:12px;text-align:center" class="fade-in">
+      <h3 style="font-family:'Inter',sans-serif;font-weight:800;font-size:1.5rem;color:#fff;margin-bottom:.75rem">Ready to Start Trading?</h3>
+      <p style="color:var(--text-muted);margin-bottom:1.5rem;font-size:.95rem">Get SQA Pro EA today and join 5,000+ traders in 30+ countries.</p>
+      <a href="#" class="btn-main" onclick="openPaymentModal(349);return false">Get The EA Now →</a>
+    </div>
+  </div>
+  <footer><div class="footer-inner"><div class="footer-brand"><div class="logo-text-f">Smart Quant Algo</div><p>Institutional-grade automated trading systems for XAUUSD and major Forex pairs.</p></div><div class="footer-col"><h4>Navigation</h4><ul><li><a onclick="showPage('home')">Home</a></li><li><a onclick="showPage('about')">About Us</a></li><li><a onclick="showPage('products')">Products</a></li><li><a onclick="showPage('results')">Results</a></li><li><a onclick="showPage('reviews')">Reviews</a></li><li><a onclick="showPage('learn')">Learn</a></li><li><a onclick="showPage('contact')">Contact</a></li></ul></div><div class="footer-col"><h4>Resources</h4><ul><li><a onclick="showPage('learn')">How It Works</a></li><li><a onclick="showPage('learn')">Beginner Guide</a></li><li><a onclick="showPage('legal')">Legal & Policies</a></li></ul></div></div><div class="footer-bottom"><p>© 2026 Smart Quant Algo. All rights reserved.</p></div><p class="risk-warning">Risk Disclaimer: Past performance is not indicative of future results.</p></footer>
+</div>
+
+<!-- ==================== LEGAL ==================== -->
+<div id="legal" class="page">
+  <div style="padding:5rem 5%;max-width:900px;margin:0 auto">
+    <div class="fade-in">
+      <p class="section-label"> Compliance & policies</p>
+      <h2 class="section-title">Legal <span>Information</span></h2>
+    </div>
+    <div class="legal-nav fade-in">
+      <button class="legal-tab active" onclick="showLegalTab('risk')">Risk Disclaimer</button>
+      <button class="legal-tab" onclick="showLegalTab('privacy')">Privacy Policy</button>
+      <button class="legal-tab" onclick="showLegalTab('terms')">Terms & Conditions</button>
+      <button class="legal-tab" onclick="showLegalTab('refund')">Return / Refund Policy</button>
+    </div>
+
+    <!-- RISK DISCLAIMER -->
+    <div class="legal-section active fade-in" id="legal-risk">
+      <h3>Risk Disclaimer & Earnings Disclosure</h3>
+      <p>Trading foreign exchange (Forex), gold (XAUUSD), silver (XAGUSD), oil, and other financial instruments on margin carries a high level of risk and may not be suitable for all investors. The high degree of leverage can work against you as well as for you. Before deciding to trade, you should carefully consider your investment objectives, level of experience, and risk appetite.</p>
+      <p>There is a possibility that you could sustain a loss of some or all of your initial investment and therefore you should not invest money that you cannot afford to lose. You should be aware of all the risks associated with foreign exchange and CFD trading, and seek advice from an independent financial advisor if you have any doubts.</p>
+      
+      <h3>No Guarantee of Profits</h3>
+      <p>Past performance of the SQA Pro EA is not indicative of future results. No representation is being made that any account will or is likely to achieve profits or losses similar to those shown on this website. The trading results displayed are from live accounts but individual results may vary based on broker conditions, VPS latency, account size, lot sizing, market conditions, and other factors beyond our control.</p>
+      
+      <h3>Hypothetical Performance Disclaimer</h3>
+      <div class="cftc-box">
+        CFTC RULE 4.41 — HYPOTHETICAL OR SIMULATED PERFORMANCE RESULTS HAVE CERTAIN LIMITATIONS. UNLIKE AN ACTUAL PERFORMANCE RECORD, SIMULATED RESULTS DO NOT REPRESENT ACTUAL TRADING. ALSO, SINCE THE TRADES HAVE NOT BEEN EXECUTED, THE RESULTS MAY HAVE UNDER-OR-OVER COMPENSATED FOR THE IMPACT, IF ANY, OF CERTAIN MARKET FACTORS, SUCH AS LACK OF LIQUIDITY. SIMULATED TRADING PROGRAMS IN GENERAL ARE ALSO SUBJECT TO THE FACT THAT THEY ARE DESIGNED WITH THE BENEFIT OF HINDSIGHT. NO REPRESENTATION IS BEING MADE THAT ANY ACCOUNT WILL OR IS LIKELY TO ACHIEVE PROFIT OR LOSSES SIMILAR TO THOSE SHOWN.
+      </div>
+
+      <h3>Earnings Disclaimer</h3>
+      <p>Any earnings or income statements, or earnings or income examples, are only estimates of what we think you could earn. There is no assurance you will do as well. If you rely upon our figures, you must accept the risk of not doing as well. Your results will vary and depend on many factors including but not limited to your background, experience, and work ethic. All trading entails risk and action should not be taken solely based on the information on this website.</p>
+      
+      <h3>Third-Party Software Disclaimer</h3>
+      <p>SQA Pro EA is a third-party software that operates within the MetaTrader 5 platform. Smart Quant Algo is not affiliated with MetaQuotes Software Corp. We are not responsible for any platform-related issues, broker execution failures, or connectivity problems outside of our software.</p>
+      <p class="legal-updated">Last updated: April 2026</p>
+    </div>
+
+    <!-- PRIVACY POLICY -->
+    <div class="legal-section fade-in" id="legal-privacy">
+      <h3>Privacy Policy</h3>
+      <p>Smart Quant Algo ("we," "us," or "our") respects your privacy and is committed to protecting your personal data. This privacy policy explains how we collect, use, and safeguard your information when you visit our website or purchase our products.</p>
+      
+      <h3>Information We Collect</h3>
+      <ul>
+        <li><strong style="color:#fff">Contact Information</strong> — Name, email address, and messaging platform handles (Telegram/WhatsApp) when you make a purchase or submit a contact form</li>
+        <li><strong style="color:#fff">Payment Information</strong> — Cryptocurrency transaction hashes and payment references for verification purposes.</li>
+        <li><strong style="color:#fff">Technical Data</strong> — Browser type, IP address, and page visit data collected via standard web analytics for site improvement purposes</li>
+      </ul>
+      
+      <h3>How We Use Your Information</h3>
+      <ul>
+        <li>To process and deliver your SQA Pro EA license</li>
+        <li>To provide technical support and setup assistance</li>
+        <li>To send product updates and security patches to active license holders</li>
+        <li>To respond to your inquiries via email, Telegram, or WhatsApp</li>
+        <li>To improve our website and product based on usage patterns</li>
+      </ul>
+      
+      <h3>Data Sharing</h3>
+      <p>We do not sell, trade, or rent your personal information to third parties. We may share data only with payment processors necessary to complete your transaction.</p>
+      
+      <h3>Data Retention</h3>
+      <p>We retain your personal data for as long as your license is active, plus 12 months after expiration for support continuity. You may request deletion of your data at any time by contacting us.</p>
+      
+      <h3>Cookies</h3>
+      <p>This website does not use tracking cookies or third-party advertising cookies. We may use essential cookies for basic site functionality only.</p>
+      
+      <h3>Your Rights</h3>
+      <p>You have the right to access, correct, or delete your personal data at any time. To exercise these rights, contact us at smartquantalgo@gmail.com.</p>
+      <p class="legal-updated">Last updated: April 2026</p>
+    </div>
+
+    <!-- TERMS & CONDITIONS -->
+    <div class="legal-section fade-in" id="legal-terms">
+      <h3>Terms & Conditions</h3>
+      <p>By purchasing and using SQA Pro EA, you agree to the following terms and conditions. Please read them carefully before completing your purchase.</p>
+      
+      <h3>License Grant</h3>
+      <ul>
+        <li>Each license grants you the right to use SQA Pro EA on the number of live accounts specified in your plan</li>
+        <li>Annual licenses are valid for 12 months from the date of purchase and must be renewed for continued use</li>
+        <li>Active annual subscribers receive all updates and new preset files during their license period</li>
+        <li>Licenses are non-transferable and may not be resold, shared, or distributed</li>
+        <li>Unlimited demo account usage is included with all license types</li>
+      </ul>
+      
+      <h3>Prohibited Use</h3>
+      <ul>
+        <li>Decompiling, reverse engineering, or modifying the EA source code</li>
+        <li>Distributing, sharing, or reselling the EA files to any third party</li>
+        <li>Using the EA on more live accounts than your license permits</li>
+        <li>Claiming the EA as your own creation or re-branding it</li>
+      </ul>
+      
+      <h3>Disclaimer of Warranties</h3>
+      <p>SQA Pro EA is provided "as is" without warranty of any kind, either express or implied. We do not warrant that the software will be uninterrupted, error-free, or that it will produce any specific financial results. Trading results depend on many factors including broker conditions, market volatility, and account configuration.</p>
+      
+      <h3>Limitation of Liability</h3>
+      <p>Smart Quant Algo shall not be liable for any direct, indirect, incidental, special, or consequential damages resulting from the use or inability to use our software, including but not limited to trading losses, lost profits, or data loss. Your use of SQA Pro EA is at your sole risk.</p>
+      
+      <h3>Updates & Support</h3>
+      <ul>
+        <li>All license holders receive free product updates for the duration of their license</li>
+        <li>Support is provided via Telegram, WhatsApp, and email during business hours (Mon–Sat, 9AM–8PM IST)</li>
+        <li>We aim to respond to all support inquiries within 24 hours</li>
+      </ul>
+      
+      <h3>Governing Law</h3>
+      <p>These terms shall be governed by and construed in accordance with applicable laws. Any disputes shall be resolved through good-faith negotiation before pursuing other remedies.</p>
+      <p class="legal-updated">Last updated: April 2026</p>
+    </div>
+
+    <!-- REFUND POLICY -->
+    <div class="legal-section fade-in" id="legal-refund">
+      <h3>Return & Refund Policy</h3>
+      <p>Due to the digital nature of SQA Pro EA, we operate under the following refund policy. Please review this carefully before making a purchase.</p>
+      
+      <h3>Digital Product Delivery</h3>
+      <p>SQA Pro EA is a digital product delivered electronically via Telegram or WhatsApp within 24 hours of verified payment. Once the EA files have been delivered, the product is considered received.</p>
+      
+      <h3>Refund Eligibility</h3>
+      <ul>
+        <li><strong style="color:#fff">Before delivery</strong> — If you contact us before the EA files are delivered, a full refund will be issued within 48 hours</li>
+        <li><strong style="color:#fff">After delivery</strong> — Due to the digital nature of the product and the inability to "return" software once received, refunds are not available after delivery</li>
+        <li><strong style="color:#fff">Technical issues</strong> — If the EA does not function as described and our support team cannot resolve the issue, we will work with you on a case-by-case basis</li>
+      </ul>
+      
+      <h3>Our Commitment</h3>
+      <p>We stand behind the quality of SQA Pro EA. Before purchasing, we encourage you to:</p>
+      <ul>
+        <li>Review our live trading results on the Results page</li>
+        <li>Read client testimonials on the Reviews page</li>
+        <li>Contact us with any questions before buying</li>
+        <li>Test the EA on a demo account first after receiving it</li>
+      </ul>
+      
+      <h3>Dispute Resolution</h3>
+      <p>If you have any concerns about your purchase, please contact us directly at smartquantalgo@gmail.com or via Telegram before initiating any payment disputes. We are committed to resolving all issues promptly and fairly.</p>
+      <p class="legal-updated">Last updated: April 2026</p>
+    </div>
+  </div>
+  <footer><div class="footer-inner"><div class="footer-brand"><div class="logo-text-f">Smart Quant Algo</div><p>Institutional-grade automated trading systems for XAUUSD and major Forex pairs.</p></div><div class="footer-col"><h4>Navigation</h4><ul><li><a onclick="showPage('home')">Home</a></li><li><a onclick="showPage('about')">About Us</a></li><li><a onclick="showPage('products')">Products</a></li><li><a onclick="showPage('results')">Results</a></li><li><a onclick="showPage('reviews')">Reviews</a></li><li><a onclick="showPage('learn')">Learn</a></li><li><a onclick="showPage('contact')">Contact</a></li></ul></div><div class="footer-col"><h4>Resources</h4><ul><li><a onclick="showPage('learn')">How It Works</a></li><li><a onclick="showPage('learn')">Beginner Guide</a></li><li><a onclick="showPage('legal')">Legal & Policies</a></li></ul></div></div><div class="footer-bottom"><p>© 2026 Smart Quant Algo. All rights reserved.</p></div><p class="risk-warning">Risk Disclaimer: Past performance is not indicative of future results.</p></footer>
+</div>
+<!-- BACK TO TOP -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
+
+<!-- WHATSAPP FLOAT -->
+<a href="https://wa.me/message/s918870109647" target="_blank" rel="noopener" class="whatsapp-float" aria-label="Chat on WhatsApp"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg><span class="wa-tooltip">Chat with us!</span></a>
+
+<!-- STICKY MOBILE CTA -->
+<div class="mobile-cta-bar">
+  <div><div class="mcta-price">$349/yr</div><div class="mcta-label">SQA Pro EA</div></div>
+  <button class="mcta-btn" onclick="openPaymentModal(349)">Buy Now →</button>
+</div>
+
+<div class="modal-overlay" id="paymentModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="step-indicator" id="stepDots">
+      <div class="step-dot active" id="dot1"></div>
+      <div class="step-dot" id="dot2"></div>
+      <div class="step-dot" id="dot3"></div>
+      <div class="step-dot" id="dot4"></div>
+      <div class="step-dot" id="dot5"></div>
+    </div>
+
+    <!-- STEP 1: Payment Method -->
+    <div class="modal-step active" id="step1">
+      <div class="modal-title">Choose A Payment Method</div>
+      <div class="modal-sub"><span class="urgency-badge" style="margin:0">⏱ LIMITED SLOTS</span> Select payment for <b id="priceDisplay">$349.00</b></div>
+      <div class="pay-methods">
+        <div class="pay-method-btn" onclick="selectMethod('crypto')">
+          <span class="pay-method-name">CRYPTO</span>
+          <span class="pay-method-fee">0 fee</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: Choose Crypto -->
+    <div class="modal-step" id="step2">
+      <div class="modal-title">Choose A Cryptocurrency</div>
+      <div class="modal-sub">Select the cryptocurrency you want to use for the <b id="priceDisplay2">$349</b> payment</div>
+      <div class="crypto-grid">
+        <div class="crypto-btn" onclick="selectCrypto('USDT','Tether')"><span class="crypto-name">Tether</span><span class="crypto-ticker">USDT</span></div>
+        <div class="crypto-btn" onclick="selectCrypto('BTC','Bitcoin')"><span class="crypto-name">Bitcoin</span><span class="crypto-ticker">BTC</span></div>
+        <div class="crypto-btn" onclick="selectCrypto('ETH','Ethereum')"><span class="crypto-name">Ethereum</span><span class="crypto-ticker">ETH</span></div>
+        <div class="crypto-btn" onclick="selectCrypto('BNB_PAY','Binance Pay')"><span class="crypto-name">Binance Pay</span><span class="crypto-ticker">ID: 784391373</span></div>
+      </div>
+      <div class="modal-btn-row">
+        <button class="modal-btn-back" onclick="goStep(1)">Back</button>
+        <button class="modal-btn-continue" onclick="goStep(3)" id="cryptoContinue" style="opacity:.4;pointer-events:none">Continue</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Choose Network (for USDT/multi-network coins) -->
+    <div class="modal-step" id="step3">
+      <div class="modal-title">Choose Network</div>
+      <div class="modal-sub">Select the blockchain network for your <b id="cryptoLabel">USDT</b> payment</div>
+      <div class="network-grid" id="networkGrid">
+        <!-- filled by JS -->
+      </div>
+      <div class="modal-btn-row">
+        <button class="modal-btn-back" onclick="goStep(2)">Back</button>
+        <button class="modal-btn-continue" onclick="goStep(4)" id="networkContinue" style="opacity:.4;pointer-events:none">Continue</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: Complete Payment -->
+    <div class="modal-step" id="step4">
+      <div class="modal-title">Complete Payment</div>
+      <div class="timer-display" id="timerDisplay">10:00</div>
+      <div class="timer-warning">Complete payment before timer expires</div>
+      <div class="payment-address-wrap">
+        <span class="payment-address-label">Payment Address:</span>
+        <div class="payment-address-row">
+          <input class="payment-address-input" id="walletAddress" readonly value="0x0b65c0bbcf60f103074f64fbd6892ce728dad156">
+          <button class="copy-btn" onclick="copyAddress()">Copy</button>
+        </div>
+      </div>
+      <div class="payment-instructions">
+        <div class="instructions-title">Payment Instructions:</div>
+        <ul class="instructions-list">
+          <li>Send exactly <b id="sendAmount">$349</b> to the address above</li>
+          <li>Use only the <b id="networkLabel">BEP20</b> network</li>
+          <li>Take a screenshot of your transaction</li>
+          <li>Payment must be completed within 10 minutes</li>
+          <li>Click <b>Payment Completed</b> once done</li>
+        </ul>
+      </div>
+      <div class="modal-btn-row">
+        <button class="modal-btn-back" onclick="goStep(3)">Back</button>
+        <button class="modal-btn-green" onclick="goStep(5)">Payment Completed</button>
+      </div>
+    </div>
+
+    <!-- STEP 5: Payment Confirmed -->
+    <div class="modal-step" id="step5">
+      <div class="confirmed-icon">✅</div>
+      <div class="modal-title" style="color:#00e676">Payment Confirmed!</div>
+      <div class="modal-sub">Now, please contact us with proof of your payment to receive your <b>SQA Pro EA</b> robot.</div>
+      <div class="contacts-box">
+        <div class="contacts-title">Our Contacts:</div>
+        <ul class="contacts-list">
+          <li><b>Email:</b> <a href="mailto:smartquantalgo@gmail.com">smartquantalgo@gmail.com</a></li>
+          <li><b>WhatsApp:</b> <a href="https://wa.me/message/s918870109647">Message us on WhatsApp</a></li>
+          <li><b>Telegram:</b> <a href="https://t.me/SmartQuantAlgoAdmin">@SmartQuantAlgoAdmin</a></li>
+        </ul>
+      </div>
+      <div class="important-box">
+        <div class="important-title">Important:</div>
+        <ul class="instructions-list">
+          <li>Attach the screenshot of your transaction</li>
+          <li>Mention that you purchased <b>SQA Pro EA</b></li>
+          <li>We will send you the robot within 24h after verification</li>
+        </ul>
+      </div>
+      <div class="modal-btn-row">
+        <button class="modal-btn-close" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+
+
+// Page navigation
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const nl=document.getElementById('nav-'+id);
+  if(nl)nl.classList.add('active');
+  document.querySelector('.nav-links').classList.remove('open');
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>{
+    document.querySelectorAll('#'+id+' .fade-in').forEach(el=>el.classList.add('visible'));
+    if(id==='home')animateCounters();
+  },100);
+}
+
+// Counters
+let countersRun=false;
+function animateCounters(){
+  if(countersRun)return;countersRun=true;
+  document.querySelectorAll('[data-to]').forEach(el=>{
+    const t=+el.dataset.to;let c=0;const s=t/60;
+    const timer=setInterval(()=>{c=Math.min(c+s,t);el.textContent=Math.floor(c);if(c>=t){el.textContent=t;clearInterval(timer)}},20);
+  });
+}
+
+// Intersection observer
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.1});
+document.querySelectorAll('.fade-in').forEach(el=>io.observe(el));
+setTimeout(()=>{document.querySelectorAll('#home .fade-in').forEach(el=>el.classList.add('visible'));animateCounters()},200);
+
+// Contact form (Web3Forms)
+document.getElementById('contact-form').addEventListener('submit',function(e){
+  e.preventDefault();
+  const btn=document.getElementById('cf-btn');
+  const form=this;
+  const formData=new FormData(form);
+  btn.textContent='Sending...';btn.disabled=true;
+  fetch('https://api.web3forms.com/submit',{
+    method:'POST',
+    body:formData
+  }).then(function(r){return r.json()}).then(function(data){
+    if(data.success){
+      btn.textContent='Message Sent ✓';
+      btn.style.background='transparent';btn.style.color='var(--accent-green)';btn.style.border='1.5px solid var(--accent-green)';
+      form.reset();
+      setTimeout(function(){btn.textContent='Send Message →';btn.style.background='';btn.style.color='';btn.style.border='';btn.disabled=false;},4000);
+    }else{throw new Error(data.message||'Send failed');}
+  }).catch(function(err){
+    btn.textContent='Failed — Try Again';btn.style.background='transparent';btn.style.color='#f87171';btn.style.border='1.5px solid #f87171';btn.disabled=false;
+    console.error('Form error:',err);
+    setTimeout(function(){btn.textContent='Send Message →';btn.style.background='';btn.style.color='';btn.style.border='';},4000);
+  });
+});
+
+/* =====================
+   PAYMENT MODAL LOGIC
+   ===================== */
+let currentPrice=349;
+let selectedMethod='';
+let selectedCrypto='';
+let selectedNetwork='';
+let timerInterval=null;
+
+// Wallet addresses per network
+const wallets={
+  BEP20:'0x134eaf0fca8f8e9609b444e45d76aef420411265',
+  TRC20:'TLhRnPTQjGZUpUXgTrZdf1WQ5uobfWHswp',
+  ERC20:'0x134eaf0fca8f8e9609b444e45d76aef420411265',
+  POLYGON:'0x134eaf0fca8f8e9609b444e45d76aef420411265',
+  SOLANA:'HdN7S8LBd29VPnjzndimeK5ih49dTJes28ctkbbCbszR',
+  BTC:'13DATdX9ZjdbFjJjYXG5wjkMLZjFc38uZq',
+  ETH:'0x134eaf0fca8f8e9609b444e45d76aef420411265',
+  BNB_PAY:'Binance Pay ID: 784391373'
+};
+
+// Networks per crypto
+const networks={
+  USDT:[{name:'BEP20',key:'BEP20'},{name:'TRON\n(TRC20)',key:'TRC20'},{name:'Ethereum\n(ERC20)',key:'ERC20'},{name:'Polygon\nPOS',key:'POLYGON'},{name:'Solana',key:'SOLANA'}],
+  BTC:[{name:'Bitcoin\nNetwork',key:'BTC'}],
+  ETH:[{name:'Ethereum\n(ERC20)',key:'ERC20'},{name:'BEP20',key:'BEP20'}],
+  BNB_PAY:null
+};
+
+function openPaymentModal(price){
+  currentPrice=price;
+  document.getElementById('priceDisplay').textContent='$'+price+'.00';
+  document.getElementById('priceDisplay2').textContent='$'+price;
+  document.getElementById('sendAmount').textContent='$'+price;
+  selectedMethod='crypto';selectedCrypto='';selectedNetwork='';
+  goStep(2);
+  document.getElementById('paymentModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(){
+  document.getElementById('paymentModal').classList.remove('open');
+  document.body.style.overflow='';
+  if(timerInterval){clearInterval(timerInterval);timerInterval=null;}
+}
+
+// Close on overlay click
+document.getElementById('paymentModal').addEventListener('click',function(e){
+  if(e.target===this)closeModal();
+});
+
+function updateDots(step){
+  for(let i=1;i<=5;i++){
+    const d=document.getElementById('dot'+i);
+    d.className='step-dot';
+    if(i<step)d.classList.add('done');
+    else if(i===step)d.classList.add('active');
+  }
+}
+
+function goStep(n){
+  document.querySelectorAll('.modal-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('step'+n).classList.add('active');
+  updateDots(n);
+  if(n===4)startTimer();
+  else if(timerInterval){clearInterval(timerInterval);timerInterval=null;}
+}
+
+function selectMethod(method){
+  selectedMethod=method;
+  document.querySelectorAll('.pay-method-btn').forEach(b=>b.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  setTimeout(()=>{
+    if(method==='crypto'){
+      goStep(2);
+    } else {
+      // Non-crypto: skip to address step
+      selectedNetwork=method.toUpperCase();
+      const addr=wallets[method.toUpperCase()]||'Contact us for payment details';
+      document.getElementById('walletAddress').value=addr;
+      document.getElementById('networkLabel').textContent=method.charAt(0).toUpperCase()+method.slice(1);
+      updateDots(4);
+      document.querySelectorAll('.modal-step').forEach(s=>s.classList.remove('active'));
+      document.getElementById('step4').classList.add('active');
+      startTimer();
+    }
+  },200);
+}
+
+function selectCrypto(ticker,name){
+  selectedCrypto=ticker;
+  document.querySelectorAll('.crypto-btn').forEach(b=>b.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  const cont=document.getElementById('cryptoContinue');
+  cont.style.opacity='1';cont.style.pointerEvents='auto';
+
+  // If Binance Pay, skip network step
+  if(ticker==='BNB_PAY'){
+    cont.onclick=()=>{
+      document.getElementById('walletAddress').value=wallets.BNB_PAY;
+      document.getElementById('networkLabel').textContent='Binance Pay';
+      updateDots(4);
+      document.querySelectorAll('.modal-step').forEach(s=>s.classList.remove('active'));
+      document.getElementById('step4').classList.add('active');
+      startTimer();
+    };
+  } else {
+    cont.onclick=()=>{
+      buildNetworkGrid(ticker);
+      document.getElementById('cryptoLabel').textContent=ticker;
+      goStep(3);
+    };
+  }
+}
+
+function buildNetworkGrid(ticker){
+  const nets=networks[ticker]||[{name:'Direct\nNetwork',key:ticker}];
+  const grid=document.getElementById('networkGrid');
+  grid.innerHTML='';
+  nets.forEach(net=>{
+    const div=document.createElement('div');
+    div.className='network-btn';
+    const addr=wallets[net.key]||'Contact us';
+    const shortAddr=addr.length>20?addr.substring(0,18)+'...':addr;
+    div.innerHTML=`<span class="network-name">${net.name.replace('\n','<br>')}</span><span class="network-addr">${shortAddr}</span>`;
+    div.onclick=()=>{
+      document.querySelectorAll('.network-btn').forEach(b=>b.classList.remove('selected'));
+      div.classList.add('selected');
+      selectedNetwork=net.key;
+      document.getElementById('walletAddress').value=wallets[net.key]||'Contact us for details';
+      document.getElementById('networkLabel').textContent=net.name.replace('\n',' ');
+      const nc=document.getElementById('networkContinue');
+      nc.style.opacity='1';nc.style.pointerEvents='auto';
+      nc.onclick=()=>goStep(4);
+    };
+    grid.appendChild(div);
+  });
+  document.getElementById('networkContinue').style.opacity='0.4';
+  document.getElementById('networkContinue').style.pointerEvents='none';
+}
+
+function copyAddress(){
+  const addr=document.getElementById('walletAddress').value;
+  navigator.clipboard.writeText(addr).then(()=>{
+    const btn=document.querySelector('.copy-btn');
+    btn.textContent='Copied!';btn.style.background='#00e676';
+    setTimeout(()=>{btn.textContent='Copy';btn.style.background='';},2000);
+  }).catch(()=>{
+    // Fallback
+    const el=document.getElementById('walletAddress');
+    el.select();document.execCommand('copy');
+    const btn=document.querySelector('.copy-btn');
+    btn.textContent='Copied!';
+    setTimeout(()=>{btn.textContent='Copy'},2000);
+  });
+}
+
+function startTimer(){
+  if(timerInterval)clearInterval(timerInterval);
+  let seconds=600;
+  const display=document.getElementById('timerDisplay');
+  const warning=document.getElementById('timerWarning');
+  timerInterval=setInterval(()=>{
+    seconds--;
+    const m=Math.floor(seconds/60);
+    const s=seconds%60;
+    display.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    
+    if(seconds<=60){
+      display.style.color='#ff5252';
+      warning.textContent='⚠ HURRY! Time is running out!';
+      warning.style.color='#ff5252';
+      display.style.animation='buttonGlow .5s ease-in-out infinite';
+    } else {
+      display.style.color='#fff';
+      warning.textContent='Complete payment before timer expires';
+      warning.style.color='var(--text-muted)';
+      display.style.animation='none';
+    }
+    
+    if(seconds<=0){
+      clearInterval(timerInterval);
+      display.textContent='00:00';
+      display.style.color='#ff5252';
+      warning.textContent='⏱ Time expired. Restart payment.';
+      display.style.animation='none';
+    }
+  },1000);
+}
+
+/* =====================
+   LEGAL TAB SWITCHING
+   ===================== */
+function showLegalTab(tab){
+  document.querySelectorAll('.legal-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.legal-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('legal-'+tab).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+/* =====================
+   TESTIMONIALS DATA (60 REVIEWS)
+   ===================== */
+const testimonials=[
+{name:"Vikram S.",loc:"Mumbai, India",date:"Apr 2026",stars:5,text:"Running SQA Pro on XAUUSD and GBPUSD for 5 months now. Started with ₹30,000 ($360) and my account is already at ₹78,000. The preset files make it completely plug-and-play. Best investment I've made in trading.",src:"Telegram"},
+{name:"Ananya R.",loc:"Bangalore, India",date:"Apr 2026",stars:5,text:"I'm a software engineer with zero trading experience. Set up SQA Pro on a Contabo VPS following the PDF guide — took 25 minutes. It's been running hands-free for 3 months. 9% monthly average. Incredible.",src:"WhatsApp"},
+{name:"Rajesh K.",loc:"Delhi, India",date:"Apr 2026",stars:5,text:"Passed FTMO $50K challenge in 6 trading days using SQA Pro. The daily drawdown protection stayed well within the 5% limit. Now running on my funded account — already withdrawn $1,800.",src:"Trustpilot"},
+{name:"Priya M.",loc:"Chennai, India",date:"Mar 2026",stars:5,text:"As a working mother, I don't have time for manual trading. SQA Pro runs 24/5 on my VPS and I just check the results every morning. ₹50,000 to ₹1,12,000 in 4 months. Life-changing.",src:"Telegram"},
+{name:"Arjun D.",loc:"Hyderabad, India",date:"Mar 2026",stars:5,text:"Tested 7 different EAs from MQL5 Market before finding SQA Pro. This is the ONLY one where live results match the backtest. 92% win rate on my IC Markets account after 400+ trades.",src:"Trustpilot"},
+{name:"Sneha P.",loc:"Pune, India",date:"Mar 2026",stars:4,text:"Good EA with solid risk management. The news filter saved me during the last RBI announcement — EA stopped trading automatically. Only reason for 4 stars is I wish there were more Indian broker presets.",src:"WhatsApp"},
+{name:"Amit V.",loc:"Ahmedabad, India",date:"Mar 2026",stars:5,text:"Running on 6 pairs simultaneously on Exness. The correlation filter is genius — prevented me from being overexposed to USD during the Fed decision week. My ₹2 lakh account is growing steadily at 10% per month.",src:"Telegram"},
+{name:"Deepak T.",loc:"Kolkata, India",date:"Mar 2026",stars:5,text:"I manage a small trading community of 80+ members. Recommended SQA Pro to everyone after testing it for 3 months. About 35 members are now using it with consistently positive feedback.",src:"Trustpilot"},
+{name:"Kavitha N.",loc:"Coimbatore, India",date:"Feb 2026",stars:5,text:"Started with just $200 minimum deposit. Using micro lots (0.01) with default risk settings. Account is up 42% in 3.5 months. Perfect for small Indian accounts. No minimum lot size issues.",src:"WhatsApp"},
+{name:"Suresh B.",loc:"Jaipur, India",date:"Feb 2026",stars:5,text:"The XAUUSD performance is outstanding. +28% last month alone on my live Pepperstone account. Running it on a ₹400/month Vultr VPS. The setup cost is tiny compared to the returns.",src:"Telegram"},
+{name:"Rohit G.",loc:"Lucknow, India",date:"Feb 2026",stars:5,text:"Was doing manual scalping for 2 years with 55% win rate. Switched to SQA Pro — win rate jumped to 91%. No more emotional decisions, no more revenge trading. My P&L has never looked better.",src:"Trustpilot"},
+{name:"Meera J.",loc:"Kochi, India",date:"Feb 2026",stars:5,text:"Complete beginner here. Had never opened MetaTrader before. The PDF guide + Telegram support team got me running in under 30 minutes. 2 months later, my account is up 18%. Couldn't be happier.",src:"WhatsApp"},
+{name:"Karthik R.",loc:"Mysore, India",date:"Feb 2026",stars:4,text:"Solid performer on EURUSD and GBPUSD. XAUUSD is the star pair for sure. The trailing stop feature lets winners run beautifully. Had one losing week in 4 months — recovered the next week.",src:"Telegram"},
+{name:"Pooja A.",loc:"Chandigarh, India",date:"Jan 2026",stars:5,text:"The ₹29,000 annual license is an absolute steal. I spent more on a single MQL5 EA that didn't even work. SQA Pro has been profitable since day one on my live account. Will definitely renew.",src:"Trustpilot"},
+{name:"Nikhil S.",loc:"Indore, India",date:"Jan 2026",stars:5,text:"Prop firm trader. Passed FTMO, E8 Funding, and The Funded Trader all using SQA Pro. The daily DD protection is perfectly calibrated for challenge rules. Essential tool for Indian funded traders.",src:"Telegram"},
+{name:"Divya L.",loc:"Nagpur, India",date:"Jan 2026",stars:5,text:"What I love most is the transparency. They show live account results, not cherry-picked backtests. My actual results closely match what's shown on the website. Genuine product, genuine team.",src:"WhatsApp"},
+{name:"Sanjay M.",loc:"Vadodara, India",date:"Jan 2026",stars:5,text:"The spread protection filter is underrated. My Exness account has occasional spread spikes on gold during rollover — the EA just skips those entries. No more getting caught with bad fills at 1 AM IST.",src:"Trustpilot"},
+{name:"Lakshmi K.",loc:"Visakhapatnam, India",date:"Jan 2026",stars:5,text:"I run SQA Pro from my laptop at home but recently moved to a VPS for better uptime. The difference is night and day — zero missed trades, 24/5 operation. ₹500/month VPS pays for itself many times over.",src:"Telegram"},
+{name:"Manish P.",loc:"Bhopal, India",date:"Dec 2025",stars:5,text:"Hard stop-loss on every trade. No martingale. No grid. After blowing ₹1.5 lakh on a grid bot last year, I only trust EAs with proper risk management now. SQA Pro delivers exactly that.",src:"WhatsApp"},
+{name:"Shruti D.",loc:"Surat, India",date:"Dec 2025",stars:5,text:"The session time filters are brilliant. I set it to London+NY sessions only and the results are incredible. Avoiding Asian session noise made a big difference, especially on GBPUSD.",src:"Trustpilot"},
+{name:"Arun T.",loc:"Gurgaon, India",date:"Dec 2025",stars:5,text:"My ₹1 lakh account is now at ₹2,45,000 after 6 months. Compounding at about 10% monthly. The money management feature automatically scales lot sizes as balance grows. Very smart design.",src:"Telegram"},
+{name:"Ritu S.",loc:"Noida, India",date:"Dec 2025",stars:4,text:"Reliable EA. Not going to make you a crorepati overnight, but 8-12% monthly is realistic and sustainable. Exactly what they promise. No hype, just consistent results. Honest product.",src:"WhatsApp"},
+{name:"Prakash J.",loc:"Ranchi, India",date:"Dec 2025",stars:5,text:"The quarterly preset updates are a huge advantage. Every time market conditions shift, the team releases new .set files optimized for current volatility. No other EA vendor does this for free.",src:"Trustpilot"},
+{name:"Nisha G.",loc:"Thiruvananthapuram, India",date:"Nov 2025",stars:5,text:"Started with a ₹15,000 account ($180). Now at ₹38,000 after 5 months. Running XAUUSD and EURUSD only. The micro lot sizing works perfectly for small Indian trading accounts.",src:"Telegram"},
+{name:"Varun H.",loc:"Patna, India",date:"Nov 2025",stars:5,text:"The daily drawdown protection is crucial for prop firm challenges. Set it to 3% and the EA stops trading if that limit is hit. Passed my funded account evaluation without any stress.",src:"WhatsApp"},
+{name:"Anjali C.",loc:"Thane, India",date:"Nov 2025",stars:5,text:"I referred SQA Pro to 6 friends from my office. All of them are running it now and all are profitable. The preset files eliminate the guesswork — just load, enable AutoTrading, and let it work.",src:"Trustpilot"},
+{name:"Gaurav R.",loc:"Guwahati, India",date:"Nov 2025",stars:5,text:"Running on IC Markets RAW account with Contabo VPS. Execution is flawless with sub-10ms latency. The combination of ECN broker + low-latency VPS + SQA Pro is the winning formula.",src:"Telegram"},
+{name:"Sunita M.",loc:"Jodhpur, India",date:"Nov 2025",stars:5,text:"What sold me was seeing the live-verified results before purchasing. After running it myself for 4 months, I can confirm the stats are accurate. 90% win rate on my account across 5 pairs.",src:"WhatsApp"},
+{name:"Harish V.",loc:"Dehradun, India",date:"Oct 2025",stars:5,text:"The ATR-based stop-loss adapts perfectly to changing volatility. When gold gets choppy, stops widen automatically. When it's calm, they tighten up. Very intelligent design — not a fixed-pip SL like most EAs.",src:"Trustpilot"},
+{name:"Pallavi B.",loc:"Nashik, India",date:"Oct 2025",stars:5,text:"Before SQA Pro, I was spending 6 hours daily watching charts. Now I check my phone once in the morning and see the profits. Freed up so much time for my family. Trading is finally stress-free.",src:"Telegram"},
+{name:"Raghav N.",loc:"Kanpur, India",date:"Oct 2025",stars:4,text:"Solid 5 months of live trading. Some pairs perform better than others — XAUUSD and GBPUSD are the stars. EURGBP is slower but still net positive. Overall very satisfied with the product.",src:"WhatsApp"},
+{name:"Swati K.",loc:"Aurangabad, India",date:"Oct 2025",stars:5,text:"The news filter is a life-saver. During last NFP, the EA stopped trading 30 minutes before and resumed after the spike settled. Zero losses from the volatility. Brilliant feature.",src:"Trustpilot"},
+{name:"Manoj D.",loc:"Ludhiana, India",date:"Oct 2025",stars:5,text:"I specifically chose SQA Pro because it doesn't use martingale or grid. Clean entries, clean exits, proper stop-losses. My ₹5 lakh account has been growing steadily every single month.",src:"Telegram"},
+{name:"Rekha A.",loc:"Agra, India",date:"Sep 2025",stars:5,text:"Support team on Telegram is exceptional. Had an issue with VPS setup at 11 PM IST and they responded within 15 minutes. Walked me through every step. This level of support is rare.",src:"WhatsApp"},
+{name:"Vivek S.",loc:"Bhubaneswar, India",date:"Sep 2025",stars:5,text:"Testing against 3 other EAs on the same demo account for 8 weeks. SQA Pro had the highest profit factor (2.4) and lowest max drawdown (5.2%) of all four. Cancelled the others. This is the one.",src:"Trustpilot"},
+{name:"Tanvi R.",loc:"Raipur, India",date:"Sep 2025",stars:5,text:"As a CA student, my budget is limited. The ₹29,000 annual license was a stretch but my ₹20,000 account is already up 35% in 3 months. The EA has more than paid for itself already.",src:"Telegram"},
+{name:"Ashok P.",loc:"Amritsar, India",date:"Sep 2025",stars:5,text:"Running SQA Pro since January. My $8,000 account is now at $13,500. No manual intervention at all. The EA handled the March volatility spike beautifully — just paused trading during the chaos.",src:"WhatsApp"},
+{name:"Megha T.",loc:"Mangalore, India",date:"Aug 2025",stars:5,text:"The Friday close feature is brilliant. EA automatically closes positions before the weekend gap. I lost ₹40,000 on a weekend gap with my previous EA. SQA Pro thought of everything.",src:"Trustpilot"},
+{name:"Rahul J.",loc:"Varanasi, India",date:"Aug 2025",stars:4,text:"Good product, steady returns. My only suggestion would be adding an on-chart dashboard panel. But the results speak louder — profitable 5 months straight. Can't argue with that.",src:"Telegram"},
+{name:"Preethi V.",loc:"Madurai, India",date:"Aug 2025",stars:5,text:"I track everything in Myfxbook. SQA Pro shows profit factor of 2.3 on my account over 7 months. No other EA I've tested comes close to that consistency. This is the real deal.",src:"WhatsApp"},
+{name:"Siddharth M.",loc:"Nagpur, India",date:"Aug 2025",stars:5,text:"The multi-layer entry validation is impressive. Each trade passes 5 checks before execution — trend, momentum, volatility, spread, and session. That's why the win rate is consistently above 90%.",src:"Trustpilot"},
+{name:"Bhavna G.",loc:"Shimla, India",date:"Jul 2025",stars:5,text:"Renewed my annual plan without thinking twice. 11% average monthly return on my ₹3 lakh live account. The quarterly preset updates alone make the renewal worth it. Continuous improvement.",src:"Telegram"},
+{name:"Dinesh K.",loc:"Trichy, India",date:"Jul 2025",stars:5,text:"Using SQA Pro on 3 different broker accounts (IC Markets, Pepperstone, Exness) to diversify execution risk. All three are profitable with very similar results. Strategy is genuinely robust.",src:"WhatsApp"},
+{name:"Aparna S.",loc:"Hubli, India",date:"Jul 2025",stars:5,text:"IT professional from Hubli. Was spending weekends learning candlestick patterns. Then I found SQA Pro and realized the EA does it all better than I ever could. 7 months profitable and counting.",src:"Trustpilot"},
+{name:"Kunal B.",loc:"Goa, India",date:"Jul 2025",stars:5,text:"The trailing stop is perfectly tuned for gold. I've seen trades run from 30 pips to 80+ pips because the trailing let winners ride. Much smarter profit-taking than fixed TP levels.",src:"Telegram"},
+{name:"Isha N.",loc:"Jamshedpur, India",date:"Jun 2025",stars:5,text:"My husband was skeptical but let me try with ₹20,000. After 3 months of consistent profits, he added ₹1 lakh to the account. Now we're both believers. The risk management is what convinced him.",src:"WhatsApp"},
+{name:"Naveen R.",loc:"Mysore, India",date:"Jun 2025",stars:5,text:"Switched from manual scalping to SQA Pro 8 months ago. My Sharpe ratio went from 0.8 to 2.1. My max drawdown dropped from 18% to 6%. Everything improved. Algorithm beats emotions every time.",src:"Trustpilot"},
+{name:"Yamini D.",loc:"Vijayawada, India",date:"Jun 2025",stars:4,text:"Consistently profitable since I started. Some weeks are better than others but overall trajectory is clearly upward. The support team helped me fine-tune settings for my Exness account.",src:"Telegram"},
+{name:"Sachin A.",loc:"Kolhapur, India",date:"Jun 2025",stars:5,text:"Was paying ₹5,000/month for trading signals that gave 60% accuracy. SQA Pro costs ₹2,400/month (annual plan) and gives 92% accuracy. The math is simple. Cancelled the signal service.",src:"WhatsApp"},
+{name:"Geeta L.",loc:"Udaipur, India",date:"May 2025",stars:5,text:"School teacher by day, automated trader by night. SQA Pro runs on my ₹400/month Vultr VPS while I sleep. Waking up to see green trades every morning has become my favourite part of the day.",src:"Trustpilot"},
+{name:"Marcus T.",loc:"London, UK",date:"Mar 2026",stars:5,text:"Running SQA Pro on XAUUSD and GBPUSD for 4 months now. Consistent 8-12% monthly returns with drawdown never exceeding 7%. Best EA investment I've made.",src:"Trustpilot"},
+{name:"Aisha K.",loc:"Dubai, UAE",date:"Mar 2026",stars:5,text:"I was skeptical about EAs after getting burned twice before. SQA Pro is different — the stop-loss actually works, and the preset files are genuinely optimized. My $5K account is up 34% in 3 months.",src:"Telegram"},
+{name:"Daniel R.",loc:"São Paulo, Brazil",date:"Feb 2026",stars:5,text:"Passed my FTMO $100K challenge on the first attempt using SQA Pro. The daily drawdown protection saved me during the NFP week. Incredible risk management built in.",src:"Trustpilot"},
+{name:"James W.",loc:"Sydney, Australia",date:"Feb 2026",stars:5,text:"I've tested dozens of EAs from MQL5 market. SQA Pro is the only one that performs consistently on a live account the way it does on backtest. The walk-forward optimization is real.",src:"Trustpilot"},
+{name:"Chen Wei",loc:"Shanghai, China",date:"Jan 2026",stars:5,text:"Running on IC Markets RAW account. Execution is flawless. The spread filter prevents bad entries during rollover. Very impressed with the technical depth of this EA.",src:"Telegram"},
+{name:"Sofia L.",loc:"Madrid, Spain",date:"Feb 2026",stars:5,text:"Started with $1,000 on a demo for 2 weeks, then went live. Now 6 weeks in and my account is up 22%. The news filter alone has saved me from at least 3 bad entries.",src:"Telegram"},
+{name:"Kevin O.",loc:"Lagos, Nigeria",date:"Nov 2025",stars:5,text:"SQA Pro turned my $500 account into $890 in 3 months. Using micro lots with the default risk settings. The daily drawdown limit kept my account safe during the December volatility.",src:"Telegram"},
+{name:"Ben S.",loc:"Singapore",date:"Aug 2025",stars:5,text:"Prop firm trader here. Passed FTMO, The Funded Trader, and E8 all using SQA Pro. The daily DD protection is perfectly calibrated for challenge rules. Essential tool for funded traders.",src:"Trustpilot"},
+{name:"Tom E.",loc:"Chicago, USA",date:"Oct 2025",stars:5,text:"I've been trading manually for 8 years. SQA Pro EA outperforms my manual trading by a wide margin. Hard to admit, but the algorithm is better than me at executing entries.",src:"Trustpilot"},
+{name:"Grace T.",loc:"Nairobi, Kenya",date:"Jul 2025",stars:5,text:"As a working professional, I don't have time to stare at charts all day. SQA Pro runs on my VPS and I just check results every evening. It's made trading completely hands-free.",src:"Trustpilot"}
+];
+
+let reviewsShown=0;
+const reviewsPerLoad=12;
+
+function renderReviews(start,count){
+  const grid=document.getElementById('testimonialsGrid');
+  const end=Math.min(start+count,testimonials.length);
+  for(let i=start;i<end;i++){
+    const t=testimonials[i];
+    const initials=t.name.split(' ').map(w=>w[0]).join('');
+    const stars='★'.repeat(t.stars)+'☆'.repeat(5-t.stars);
+    const card=document.createElement('div');
+    card.className='test-card';
+    card.innerHTML=`<div class="test-card-header"><div class="test-avatar">${initials}</div><div><div class="test-name">${t.name}</div><div class="test-meta">${t.loc} · ${t.date}</div></div></div><div class="test-stars">${stars}</div><div class="test-text">${t.text}</div><div class="test-source">via ${t.src}</div>`;
+    grid.appendChild(card);
+  }
+  reviewsShown=end;
+  if(reviewsShown>=testimonials.length){
+    document.getElementById('loadMoreBtn').style.display='none';
+  }
+}
+
+function loadMoreReviews(){
+  renderReviews(reviewsShown,reviewsPerLoad);
+}
+
+// Initial render
+renderReviews(0,reviewsPerLoad);
+
+/* =====================
+   LIVE TICKER SIMULATION
+   ===================== */
+const tickerData=[
+  {label:'XAUUSD',base:1.84,range:1.2,type:'pair'},
+  {label:'Win Rate',base:93,range:2,type:'stat',suffix:'%',decimals:0},
+  {label:'EURUSD',base:0.42,range:0.6,type:'pair'},
+  {label:'GBPUSD',base:0.67,range:0.8,type:'pair'},
+  {label:'Profit Factor',base:2.38,range:0.3,type:'stat',decimals:2},
+  {label:'AUDUSD',base:-0.12,range:0.5,type:'pair'},
+  {label:'Monthly ROI',base:12.4,range:2.5,type:'stat',suffix:'%',decimals:1,forcePos:true},
+  {label:'Max DD',base:-6.8,range:1.5,type:'stat',suffix:'%',decimals:1,forceNeg:true},
+  {label:'Trades Today',base:47,range:15,type:'stat',decimals:0},
+  {label:'USDJPY',base:0.31,range:0.5,type:'pair'},
+  {label:'EURJPY',base:0.18,range:0.4,type:'pair'},
+  {label:'USDCAD',base:-0.09,range:0.4,type:'pair'},
+  {label:'Open Trades',base:6,range:4,type:'stat',decimals:0},
+  {label:'EURGBP',base:0.22,range:0.35,type:'pair'}
+];
+
+// Current simulated values
+const tickerValues=tickerData.map(d=>d.base);
+
+function formatTickerItem(d,val){
+  let display,cls='';
+  if(d.type==='pair'){
+    const v=val.toFixed(2);
+    display=(val>=0?'+':'')+v+'%';
+    cls=val<0?'neg':'';
+  } else {
+    if(d.forceNeg&&val>0) val=-val;
+    if(d.forcePos&&val<0) val=-val;
+    const v=val.toFixed(d.decimals);
+    const prefix=(d.label==='Max DD'||d.label==='Profit Factor'||d.label==='Trades Today'||d.label==='Open Trades'||d.label==='Win Rate')?'':
+      (val>=0?'+':'');
+    display=prefix+v+(d.suffix||'');
+    cls=(d.forceNeg||val<0)?'neg':'';
+  }
+  return '<span class="tick-i">'+d.label+' <b'+(cls?' class="'+cls+'"':'')+'>'+display+'</b></span>';
+}
+
+function buildTicker(){
+  const inner=document.getElementById('tickerInner');
+  let html='';
+  for(let r=0;r<2;r++){
+    for(let i=0;i<tickerData.length;i++){
+      html+=formatTickerItem(tickerData[i],tickerValues[i]);
+    }
+  }
+  inner.innerHTML=html;
+}
+
+function updateTickerValues(){
+  for(let i=0;i<tickerData.length;i++){
+    const d=tickerData[i];
+    const delta=(Math.random()-0.5)*d.range*0.15;
+    tickerValues[i]+=delta;
+    // Keep values in a reasonable range around base
+    if(Math.abs(tickerValues[i]-d.base)>d.range){
+      tickerValues[i]=d.base+(Math.random()-0.5)*d.range*0.5;
+    }
+  }
+  // Update all <b> elements inside #tickerInner
+  const spans=document.getElementById('tickerInner').querySelectorAll('.tick-i');
+  const len=tickerData.length;
+  spans.forEach((span,idx)=>{
+    const i=idx%len;
+    const d=tickerData[i];
+    let val=tickerValues[i];
+    const b=span.querySelector('b');
+    if(!b)return;
+    if(d.type==='pair'){
+      const v=val.toFixed(2);
+      b.textContent=(val>=0?'+':'')+v+'%';
+      b.className=val<0?'neg':'';
+    } else {
+      if(d.forceNeg&&val>0) val=-val;
+      if(d.forcePos&&val<0) val=-val;
+      const v=val.toFixed(d.decimals);
+      const prefix=(d.label==='Max DD'||d.label==='Profit Factor'||d.label==='Trades Today'||d.label==='Open Trades'||d.label==='Win Rate')?'':
+        (val>=0?'+':'');
+      b.textContent=prefix+v+(d.suffix||'');
+      b.className=(d.forceNeg||val<0)?'neg':'';
+    }
+  });
+}
+
+// Build initial ticker and start live updates
+buildTicker();
+setInterval(updateTickerValues,3000);
+
+/* ===========================
+   FEATURE 1: LOADING SPINNER
+   =========================== */
+window.addEventListener('load',function(){
+  setTimeout(function(){
+    document.getElementById('pageLoader').classList.add('hidden');
+  },1600);
+});
+
+/* ===========================
+   FEATURE 2: BACK TO TOP
+   =========================== */
+window.addEventListener('scroll',function(){
+  const btn=document.getElementById('backToTop');
+  if(window.scrollY>400)btn.classList.add('visible');
+  else btn.classList.remove('visible');
+});
+
+/* ===========================
+   FEATURE 3: THEME TOGGLE
+   =========================== */
+function toggleTheme(){
+  const body=document.body;
+  body.classList.toggle('light-mode');
+  const btn=document.getElementById('themeToggle');
+  btn.textContent=body.classList.contains('light-mode')?'☀️':'🌙';
+  localStorage.setItem('sqa-theme',body.classList.contains('light-mode')?'light':'dark');
+}
+(function(){
+  if(localStorage.getItem('sqa-theme')==='light'){
+    document.body.classList.add('light-mode');
+    document.getElementById('themeToggle').textContent='☀️';
+  }
+})();
+
+/* ===========================
+   FEATURE 4: COUNTDOWN TIMER
+   =========================== */
+(function(){
+  // Set countdown to midnight tonight
+  function getEndTime(){
+    const stored=localStorage.getItem('sqa-countdown-end');
+    if(stored&&parseInt(stored)>Date.now())return parseInt(stored);
+    const end=new Date();
+    end.setHours(23,59,59,999);
+    if(end.getTime()-Date.now()<3600000){
+      end.setDate(end.getDate()+1);
+    }
+    localStorage.setItem('sqa-countdown-end',end.getTime());
+    return end.getTime();
+  }
+  const endTime=getEndTime();
+  function updateCountdown(){
+    const diff=Math.max(0,endTime-Date.now());
+    const h=Math.floor(diff/3600000);
+    const m=Math.floor((diff%3600000)/60000);
+    const s=Math.floor((diff%60000)/1000);
+    const he=document.getElementById('utHours');
+    const me=document.getElementById('utMins');
+    const se=document.getElementById('utSecs');
+    if(he){he.textContent=String(h).padStart(2,'0');me.textContent=String(m).padStart(2,'0');se.textContent=String(s).padStart(2,'0');}
+  }
+  updateCountdown();
+  setInterval(updateCountdown,1000);
+})();
+
+/* ===========================
+   FEATURE 5: LIVE TRADE FEED
+   =========================== */
+(function(){
+  const pairs=['XAUUSD','EURUSD','GBPUSD','USDJPY','AUDUSD','USDCAD','EURJPY','GBPJPY','XAGUSD','USOIL','EURGBP','NZDUSD','USDCHF','EURAUD','GBPCHF'];
+  const feed=document.getElementById('tradeFeedBody');
+  if(!feed)return;
+  function randProfit(){
+    const win=Math.random()<0.93;
+    const val=win?(Math.random()*180+5).toFixed(2):-(Math.random()*60+5).toFixed(2);
+    return parseFloat(val);
+  }
+  function randTime(){
+    const mins=Math.floor(Math.random()*58)+1;
+    return mins+'m ago';
+  }
+  function addTrade(){
+    const pair=pairs[Math.floor(Math.random()*pairs.length)];
+    const type=Math.random()>0.5?'buy':'sell';
+    const profit=randProfit();
+    const row=document.createElement('div');
+    row.className='trade-row';
+    row.style.opacity='0';row.style.transform='translateY(-10px)';
+    row.innerHTML='<div class="tr-pair">'+pair+'</div><div class="tr-type '+type+'">'+type+'</div><div class="tr-profit '+(profit>=0?'pos':'neg')+'">'+(profit>=0?'+':'')+profit.toFixed(2)+' USD</div><div class="tr-time">'+randTime()+'</div>';
+    feed.insertBefore(row,feed.firstChild);
+    requestAnimationFrame(function(){row.style.transition='opacity .3s,transform .3s';row.style.opacity='1';row.style.transform='translateY(0)';});
+    // Keep max 20 rows
+    while(feed.children.length>20)feed.removeChild(feed.lastChild);
+  }
+  // Seed with 8 trades
+  for(let i=0;i<8;i++)addTrade();
+  setInterval(addTrade,5000);
+})();
+
+/* ===========================
+   FEATURE 6: FAQ ACCORDION
+   =========================== */
+function toggleFaq(el){
+  const item=el.parentElement;
+  const answer=item.querySelector('.faq-answer');
+  const isOpen=item.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.faq-item').forEach(function(fi){
+    fi.classList.remove('open');
+    fi.querySelector('.faq-answer').style.maxHeight=null;
+  });
+  if(!isOpen){
+    item.classList.add('open');
+    answer.style.maxHeight=answer.scrollHeight+'px';
+  }
+}
+
+</script>
+</body>
+</html>
