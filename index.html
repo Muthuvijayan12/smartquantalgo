@@ -41,16 +41,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
   .hamburger.active span:nth-child(1){transform:translateY(7px) rotate(45deg);background:var(--primary)}
   .hamburger.active span:nth-child(2){opacity:0;transform:scaleX(0)}
   .hamburger.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg);background:var(--primary)}
-  .nav-links{position:fixed;top:64px;left:0;right:0;background:rgba(6,13,26,.98);backdrop-filter:blur(16px);flex-direction:column;padding:0;border-bottom:2px solid var(--primary);display:none;z-index:200;max-height:calc(100vh - 64px);overflow-y:auto;box-shadow:0 10px 30px rgba(0,0,0,.5)}
-  .nav-links.open{display:flex}
+  .nav-links{position:fixed;top:64px;right:0;left:auto;width:220px;background:rgba(10,16,28,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);flex-direction:column;padding:.5rem 0;border-left:2px solid var(--primary);border-bottom:2px solid var(--primary);border-radius:0 0 0 12px;z-index:200;max-height:calc(100vh - 64px);overflow-y:auto;box-shadow:-5px 10px 30px rgba(0,0,0,.4);transform:translateX(110%);transition:transform .3s ease;display:flex}
+  .nav-links.open{transform:translateX(0)}
   .nav-links li{border-bottom:1px solid rgba(255,255,255,.06)}
   .nav-links li:last-child{border-bottom:none}
-  .nav-links a{padding:1rem 5%;width:100%;text-align:center;font-size:.9rem;color:var(--text-muted);transition:all .2s}
-  .nav-links a:hover{background:rgba(212,175,55,.06);color:var(--primary)}
-  .nav-links a.active{color:var(--primary);background:rgba(212,175,55,.08);border-left:3px solid var(--primary)}
+  .nav-links a{padding:.7rem 1.2rem;width:100%;text-align:left;font-size:.82rem;color:var(--text-muted);transition:all .2s}
+  .nav-links a:hover{background:rgba(212,175,55,.08);color:var(--primary)}
+  .nav-links a.active{color:var(--primary);background:rgba(212,175,55,.1);border-left:3px solid var(--primary)}
   .nav-links a.active::after{display:none}
   .nav-buy{display:none}
-  .nav-overlay{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:199}
+  .nav-overlay{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:rgba(0,0,0,.3);z-index:199;transition:opacity .3s}
   .nav-overlay.show{display:block}
 }
 .logo-text{font-family:'Inter',sans-serif;font-weight:700;font-size:1.1rem;color:#fff;letter-spacing:0.5px;line-height:1.1}
