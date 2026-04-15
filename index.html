@@ -38,9 +38,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .hamburger span{display:block;width:24px;height:2px;background:var(--text);transition:all .3s}
 @media(max-width:900px){
   .hamburger{display:flex}
-  .nav-links{position:fixed;top:72px;left:0;right:0;background:rgba(6,13,26,.98);backdrop-filter:blur(16px);flex-direction:column;padding:1rem 0;border-bottom:1px solid var(--border);display:none;z-index:200;max-height:calc(100vh - 72px);overflow-y:auto}
+  .nav-links{position:fixed;top:64px;left:0;right:0;background:rgba(6,13,26,.98);backdrop-filter:blur(16px);flex-direction:column;padding:.75rem 0;border-bottom:1px solid var(--border);display:none;z-index:200;max-height:calc(100vh - 64px);overflow-y:auto}
   .nav-links.open{display:flex}
-  .nav-links a{padding:.75rem 5%;width:100%;text-align:center;font-size:.8rem}
+  .nav-links a{padding:.7rem 5%;width:100%;text-align:center;font-size:.85rem}
   .nav-buy{display:none}
 }
 .logo-text{font-family:'Inter',sans-serif;font-weight:700;font-size:1.1rem;color:#fff;letter-spacing:0.5px;line-height:1.1}
@@ -101,7 +101,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .stat-cell:hover{background:rgba(212,175,55,0.05)}
 .stat-num{font-family:'Inter',sans-serif;font-weight:900;font-size:2.5rem;color:var(--primary);display:block;letter-spacing:-0.02em}
 .stat-label{font-size:.78rem;color:var(--text-muted);letter-spacing:0.5px;text-transform:uppercase;margin-top:4px;font-family:'Inter',sans-serif;font-weight:600}
-@media(max-width:700px){.stats-bar{grid-template-columns:1fr 1fr}.stat-cell:nth-child(2){border-right:none}.stat-cell:nth-child(3){border-right:1px solid var(--border)}}
+@media(max-width:700px){.stats-bar{grid-template-columns:1fr 1fr}}
 
 /* SECTION HEADERS */
 .section-label{font-family:'Inter',sans-serif;font-size:.7rem;letter-spacing:0.5px;color:var(--text-muted);text-transform:uppercase;margin-bottom:.75rem;font-weight:600}
@@ -437,6 +437,7 @@ footer{background:var(--bg-dark);border-top:1px solid var(--border);padding:3rem
   .back-to-top{bottom:5.5rem;right:1rem;width:38px;height:38px;font-size:1rem}
   .whatsapp-float{bottom:5.5rem;left:1rem;width:46px;height:46px}
   .whatsapp-float svg{width:24px;height:24px}
+  .whatsapp-float .wa-tooltip{display:none}
   footer{padding-bottom:4rem}
   .page{padding-bottom:3.5rem}
 }
@@ -545,6 +546,276 @@ body.light-mode .form-input,body.light-mode .form-select,body.light-mode .form-t
 .faq-item.open .faq-arrow{transform:rotate(180deg)}
 .faq-answer{max-height:0;overflow:hidden;transition:max-height .3s ease}
 .faq-answer-inner{padding:0 1.2rem 1rem;font-size:.85rem;color:var(--text-muted);line-height:1.7}
+
+/* ========================================
+   COMPREHENSIVE MOBILE RESPONSIVE FIXES
+   ======================================== */
+
+/* — Tablet: 768px — */
+@media(max-width:768px){
+
+  /* Force reduce padding on all inline-styled section wrappers */
+  [style*="padding:5rem 5%"],
+  [style*="padding:4rem 5%"],
+  [style*="padding:5rem 5%;"],
+  [style*="padding:4rem 5%;"],
+  [style*="padding: 5rem"],
+  [style*="padding: 4rem"]{
+    padding:2rem 4% !important;
+  }
+
+  /* Nav */
+  nav{padding:0 3%;height:64px}
+  .logo-icon{width:36px;height:36px;border-radius:8px}
+  .logo-icon svg{width:22px;height:22px}
+  .logo-text{font-size:.95rem}
+  .logo-text span{font-size:.6rem}
+  .theme-toggle{width:32px;height:32px;font-size:.85rem;margin-right:.3rem}
+  .nav-links{top:64px;max-height:calc(100vh - 64px)}
+  .nav-links a{padding:.7rem 4%;font-size:.85rem}
+
+  /* Ticker */
+  .ticker-wrap{top:64px;padding:.4rem 0}
+  .tick-i{font-size:.7rem}
+
+  /* Page offset for smaller nav */
+  .page{padding-top:94px}
+
+  /* Hero */
+  .hero{padding:1.5rem 4% !important;gap:1.5rem}
+  .hero-title{font-size:1.7rem !important}
+  .hero-title strong{font-size:1em}
+  .hero-desc{font-size:.9rem;line-height:1.7;margin-bottom:1.5rem}
+  .live-badge{font-size:.7rem;padding:.3rem .8rem;margin-bottom:1rem}
+  .btn-main,.btn-outline{padding:.75rem 1.5rem;font-size:.82rem;letter-spacing:.5px}
+  .hero-btns{gap:.75rem}
+
+  /* Robot frame */
+  .robot-frame{max-width:320px;border-radius:12px}
+  .robot-inner{padding:1rem}
+  .robot-svg{height:180px}
+  .robot-stats{gap:.6rem;margin-top:1rem}
+  .r-stat{padding:.6rem .4rem;border-radius:4px}
+  .r-stat-val{font-size:.9rem}
+  .r-stat-label{font-size:.6rem}
+  .corner-tag{font-size:.5rem}
+
+  /* Stats bar */
+  .stats-bar{grid-template-columns:1fr 1fr}
+  .stat-cell{padding:1.2rem .5rem;border-right:none;border-bottom:1px solid var(--border)}
+  .stat-cell:nth-child(odd){border-right:1px solid var(--border)}
+  .stat-cell:last-child{border-bottom:none}
+  .stat-cell:nth-last-child(2):nth-child(odd){border-bottom:none}
+  .stat-num{font-size:1.8rem}
+  .stat-label{font-size:.68rem}
+
+  /* Section headers */
+  .section-title{font-size:1.4rem !important}
+  .section-desc{font-size:.88rem}
+  .section-label{font-size:.65rem}
+
+  /* About */
+  .about-grid{gap:2rem;margin-top:2rem}
+  .about-hexagon{max-width:240px}
+  .feature-list li{font-size:.88rem;padding:.8rem 0}
+  .feat-icon{width:28px;height:28px;font-size:.8rem}
+
+  /* Inline feature grid cards */
+  [style*="minmax(240px"]{grid-template-columns:1fr 1fr !important;gap:1rem !important}
+
+  /* Product */
+  .product-wrap{padding:1.5rem;margin-top:2rem;border-radius:10px}
+  .product-header{gap:.8rem;margin-bottom:.3rem}
+  .prod-icon{width:40px;height:40px;font-size:1.2rem}
+  .prod-title{font-size:1.3rem}
+  .prod-subtitle{font-size:.7rem}
+  .pairs-grid{gap:.4rem;margin:1rem 0}
+  .pair-tag{padding:.15rem .5rem;font-size:.68rem}
+  .feature-bullets li{font-size:.85rem;padding:.5rem 0}
+  .pricing-cards{max-width:100%}
+  .price-amount{font-size:2rem}
+  .price-card{padding:1.5rem 1rem}
+
+  /* Detailed features */
+  .feat-detail-grid{grid-template-columns:1fr !important}
+  .features-detail{margin-top:2rem;padding-top:2rem}
+  .features-detail-title{font-size:1.1rem}
+  .feat-detail-card{padding:1.3rem}
+  .feat-detail-card h4{font-size:.88rem}
+  .feat-detail-card p{font-size:.8rem}
+
+  /* Urgency banner */
+  .urgency-banner{flex-direction:column;text-align:center;padding:1rem;gap:.8rem;border-radius:8px;margin-bottom:1.5rem}
+  .urgency-banner .ub-icon{font-size:1.3rem}
+  .urgency-banner .ub-text{font-size:.85rem}
+  .urgency-timer .ut-block{min-width:44px;padding:.4rem .5rem}
+  .urgency-timer .ut-num{font-size:1.1rem}
+  .urgency-timer .ut-label{font-size:.55rem}
+
+  /* Results */
+  .results-grid{grid-template-columns:1fr !important;gap:1rem}
+  .result-card{padding:1.3rem}
+  .rc-profit{font-size:1.6rem}
+  .rc-period{font-size:.75rem;margin-bottom:.75rem}
+  .rc-header{margin-bottom:.8rem}
+  .rc-stat-val{font-size:.85rem}
+  .rc-stat-label{font-size:.62rem}
+
+  /* Equity box */
+  .equity-box{padding:1.2rem;margin-bottom:2rem}
+  .equity-title{font-size:.85rem;flex-wrap:wrap}
+
+  /* Trade feed */
+  .trade-feed{margin:2rem 0}
+  .trade-feed-header{padding:.7rem 1rem}
+  .trade-feed-header h3{font-size:.88rem}
+  .trade-feed-body{max-height:220px}
+  .trade-row{padding:.5rem 1rem;gap:.6rem;font-size:.78rem}
+
+  /* Before/After equity */
+  .equity-compare{gap:1rem;margin:2rem 0}
+  .equity-compare-card{padding:1.2rem}
+  .equity-compare-card .ecc-amount{font-size:1.6rem}
+  .equity-compare-card .ecc-label{font-size:.7rem}
+
+  /* Testimonials */
+  .testimonials-header{margin-bottom:2rem}
+  .testimonials-stats{gap:1.5rem;margin:1.5rem 0 2rem}
+  .test-stat-num{font-size:1.5rem}
+  .test-stat-label{font-size:.65rem}
+  .testimonials-grid{grid-template-columns:1fr !important;gap:1rem}
+  .test-card{padding:1.2rem}
+  .test-text{font-size:.82rem}
+  .test-avatar{width:34px;height:34px;font-size:.75rem}
+  .test-name{font-size:.82rem}
+  .test-meta{font-size:.65rem}
+  .test-stars{font-size:.7rem}
+
+  /* Highlight cards */
+  .highlight-testimonials{margin:2rem 0}
+  .highlight-grid{grid-template-columns:1fr !important;gap:1rem}
+  .hl-highlight{font-size:1.15rem}
+  .hl-top{padding:1.2rem 1.2rem .8rem}
+  .hl-body{padding:.8rem 1.2rem 1.2rem}
+  .hl-text{font-size:.82rem}
+  .hl-stats-row{gap:.6rem}
+  .hl-stat{padding:.4rem .5rem}
+  .hl-stat-val{font-size:.85rem}
+
+  /* Education */
+  .edu-hero{padding:1.5rem 0 2rem;margin-bottom:2.5rem}
+  .steps-section{margin-bottom:3rem}
+  .steps-grid{grid-template-columns:1fr 1fr !important;gap:1rem}
+  .step-card{padding:1.3rem 1rem}
+  .step-num{font-size:1.8rem}
+  .step-icon{font-size:1.6rem;margin-bottom:.5rem}
+  .step-title{font-size:.85rem}
+  .step-desc{font-size:.78rem}
+  .edu-section{margin-bottom:3rem}
+  .edu-section-title{font-size:1.2rem}
+  .edu-cards{grid-template-columns:1fr !important;gap:1rem}
+  .edu-card{padding:1.3rem}
+  .edu-card h4{font-size:.9rem}
+  .edu-card p,.edu-card ul li{font-size:.82rem}
+  .glossary-grid{grid-template-columns:1fr !important;gap:.75rem}
+  .glossary-item{padding:1rem}
+  .glossary-term{font-size:.82rem}
+  .glossary-def{font-size:.78rem}
+
+  /* Contact */
+  .contact-grid{gap:2rem;margin-top:2rem}
+  .contact-form-box{padding:1.5rem;border-radius:10px}
+  .info-card{padding:1rem 1.2rem;margin-bottom:.75rem}
+  .info-icon{width:38px;height:38px;font-size:1rem}
+  .info-val{font-size:.88rem}
+  .form-input,.form-select,.form-textarea{padding:.75rem .85rem;font-size:.88rem}
+  .btn-submit{padding:.85rem;font-size:.82rem}
+
+  /* FAQ accordion */
+  .faq-question span{font-size:.82rem}
+  .faq-answer-inner{font-size:.8rem}
+
+  /* Legal */
+  .legal-nav{gap:.4rem;margin-bottom:1.5rem}
+  .legal-tab{padding:.45rem .7rem;font-size:.68rem}
+  .legal-section h3{font-size:1rem;margin:1.5rem 0 .75rem}
+  .legal-section p,.legal-section li{font-size:.82rem}
+  .legal-section .cftc-box{padding:1rem;font-size:.75rem}
+
+  /* Footer */
+  .footer-inner{gap:1.5rem;margin-bottom:1.5rem}
+  .footer-brand p{font-size:.82rem}
+  .footer-col h4{font-size:.65rem;margin-bottom:.7rem}
+  .footer-col ul li a{font-size:.82rem}
+  .footer-bottom{padding-top:1rem;gap:.5rem}
+  .footer-bottom p{font-size:.7rem}
+  .risk-warning{font-size:.65rem;margin-top:.75rem}
+
+  /* Modal */
+  .modal-overlay{padding:.5rem}
+  .modal-box{padding:1.5rem 1.2rem;border-radius:12px;max-height:90vh;overflow-y:auto}
+  .modal-title{font-size:1.15rem;margin-bottom:.4rem}
+  .modal-sub{font-size:.85rem;margin-bottom:1.2rem}
+  .pay-methods{grid-template-columns:1fr;gap:.6rem}
+  .pay-method-btn{padding:.9rem .6rem}
+  .pay-method-name{font-size:.85rem}
+  .crypto-grid{grid-template-columns:1fr 1fr;gap:.6rem}
+  .crypto-btn{padding:.8rem .5rem}
+  .crypto-name{font-size:.85rem}
+  .network-grid{grid-template-columns:1fr 1fr;gap:.6rem}
+  .network-btn{padding:.8rem .5rem}
+  .network-name{font-size:.8rem}
+  .payment-address-row{flex-direction:column;gap:.4rem}
+  .payment-address-input{font-size:.72rem;padding:.65rem .75rem}
+  .copy-btn{padding:.65rem 1rem;font-size:.8rem}
+  .payment-instructions{padding:1rem}
+  .instructions-title{font-size:.82rem}
+  .instructions-list li{font-size:.8rem}
+  .timer-display{font-size:1.6rem}
+  .modal-btn-row{flex-direction:column;gap:.5rem}
+  .modal-btn-back,.modal-btn-continue,.modal-btn-green,.modal-btn-close{width:100%;text-align:center}
+  .contacts-box{padding:1rem}
+  .contacts-list li{font-size:.82rem}
+  .important-box{padding:1rem}
+
+  /* CTA sections (inline styled) */
+  [style*="text-align:center"][style*="border-top"]{
+    padding:2rem 4% !important;
+  }
+
+  /* Prevent horizontal overflow */
+  body,html{overflow-x:hidden}
+  .page{overflow-x:hidden}
+}
+
+/* — Small phones: 480px — */
+@media(max-width:480px){
+  .hero-title{font-size:1.45rem !important}
+  .hero-desc{font-size:.85rem}
+  .btn-main,.btn-outline{padding:.7rem 1.2rem;font-size:.78rem;width:100%;text-align:center}
+  .hero-btns{flex-direction:column;align-items:stretch}
+  .stat-num{font-size:1.5rem}
+  .stat-cell{padding:1rem .3rem}
+  .section-title{font-size:1.2rem !important}
+  .steps-grid{grid-template-columns:1fr !important}
+  [style*="minmax(240px"]{grid-template-columns:1fr !important}
+  [style*="minmax(200px"]{grid-template-columns:1fr 1fr !important}
+  .product-wrap{padding:1.2rem}
+  .modal-box{padding:1.2rem 1rem}
+  .crypto-grid{grid-template-columns:1fr 1fr}
+  .network-grid{grid-template-columns:1fr 1fr}
+  .urgency-timer .ut-block{min-width:38px;padding:.3rem .4rem}
+  .urgency-timer .ut-num{font-size:.95rem}
+  .hl-highlight{font-size:1rem}
+  .rc-profit{font-size:1.4rem}
+  .price-amount{font-size:1.8rem}
+  .test-load-more{padding:.7rem 2rem;font-size:.78rem}
+  .nav-links a{font-size:.8rem;padding:.65rem 4%}
+  .about-hexagon{max-width:200px}
+  .orbit-ring{inset:-15px}
+  .orbit-ring2{inset:-35px}
+}
+
 </style>
 </head>
 <body>
