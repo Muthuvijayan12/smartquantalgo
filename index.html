@@ -2635,8 +2635,10 @@ function toggleMobileNav(){
   if(overlay)overlay.classList.toggle('show');
 }
 function closeMobileNav(){
-  document.querySelector('.nav-links').classList.remove('open');
-  document.querySelector('.hamburger').classList.remove('active');
+  const nav=document.querySelector('.nav-links');
+  const ham=document.querySelector('.hamburger');
+  if(nav)nav.classList.remove('open');
+  if(ham)ham.classList.remove('active');
   const overlay=document.getElementById('navOverlay');
   if(overlay)overlay.classList.remove('show');
 }
@@ -2649,9 +2651,11 @@ function navToPage(id,e){
 }
 function showPage(id,updateHash){
   if(!sitePages.includes(id))id='home';
+  const page=document.getElementById(id);
+  if(!page)return;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  page.classList.add('active');
   const nl=document.getElementById('nav-'+id);
   if(nl)nl.classList.add('active');
   closeMobileNav();
@@ -2662,11 +2666,38 @@ function showPage(id,updateHash){
     if(id==='home')animateCounters();
   },100);
 }
+let lastNavTouch=0;
+function handlePageLinkActivation(e){
+  const link=e.target.closest('[data-page]');
+  if(!link)return;
+  const id=link.dataset.page;
+  if(!sitePages.includes(id))return;
+  if(e.type==='click'&&Date.now()-lastNavTouch<650){
+    e.preventDefault();
+    return;
+  }
+  if(e.type==='touchend')lastNavTouch=Date.now();
+  e.preventDefault();
+  e.stopPropagation();
+  showPage(id,true);
+}
+document.addEventListener('click',handlePageLinkActivation,true);
+document.addEventListener('touchend',handlePageLinkActivation,{capture:true,passive:false});
 window.addEventListener('hashchange',()=>showPage((location.hash||'#home').slice(1),false));
 window.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.nav-links a[id^="nav-"]').forEach(a=>{
+    a.dataset.page=a.id.replace('nav-','');
+  });
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    const id=a.getAttribute('href').slice(1);
+    if(sitePages.includes(id))a.dataset.page=id;
+  });
   document.querySelectorAll('a[onclick*="showPage"]').forEach(a=>{
     const match=a.getAttribute('onclick').match(/showPage\('([^']+)'/);
-    if(match&&!a.hasAttribute('href'))a.setAttribute('href','#'+match[1]);
+    if(match){
+      a.dataset.page=match[1];
+      if(!a.hasAttribute('href'))a.setAttribute('href','#'+match[1]);
+    }
   });
   if(location.hash)showPage(location.hash.slice(1),false);
 });
